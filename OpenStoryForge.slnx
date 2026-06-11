@@ -1,0 +1,28 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".dockerignore" />
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+	
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/OpenStoryForge.Cache/OpenStoryForge.Cache.csproj" Id="191480e1-159c-4e22-8ec4-a8028ff3d85d" />
+    <Project Path="src/OpenStoryForge.EFCore/OpenStoryForge.EFCore.csproj" />
+    <Project Path="src/OpenStoryForge.Entities/OpenStoryForge.Entities.csproj" />
+    <Project Path="src/OpenStoryForge/OpenStoryForge.csproj" />
+  </Folder>
+  <Folder Name="/src/EFCore/">
+    <Project Path="src/EFCore/OpenStoryForge.EFCore.PostgreSQL/OpenStoryForge.EFCore.PostgreSQL.csproj" Id="b278f885-b102-4251-8f3d-017c89fdde47" />
+    <Project Path="src/EFCore/OpenStoryForge.EFCore.Sqlite/OpenStoryForge.EFCore.Sqlite.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/OpenStoryForge.UnitTest/OpenStoryForge.UnitTest.csproj" Id="1431d881-e169-4f1f-b696-c7ebf46ff55d" />
+  </Folder>
+  <Folder Name="/web/">
+    <File Path="web/.gitgeek" />
+  </Folder>
+</Solution>
