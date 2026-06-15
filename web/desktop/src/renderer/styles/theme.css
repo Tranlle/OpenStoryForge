@@ -1,0 +1,74 @@
+:root {
+  color-scheme: light;
+  --font-sans: "Microsoft YaHei UI", "PingFang SC", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+  --font-display: "Geist", "Microsoft YaHei UI", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+  --font-mono: "Cascadia Code", "SF Mono", "JetBrains Mono", "Noto Sans Mono", monospace;
+  --radius-shell: 28px;
+  --radius-panel: 18px;
+  --radius-control: 999px;
+}
+
+:root,
+[data-theme="paper-atelier"] {
+  color-scheme: light;
+  --background: 40 46% 93%;
+  --foreground: 28 18% 11%;
+  --surface: 38 52% 97%;
+  --surface-strong: 36 39% 88%;
+  --muted: 28 12% 43%;
+  --border: 30 22% 76%;
+  --accent: 8 72% 48%;
+  --accent-foreground: 38 60% 97%;
+  --signal: 166 48% 33%;
+  --signal-foreground: 40 46% 93%;
+  --shadow-panel: 0 30px 80px rgb(63 49 34 / 18%);
+  --shadow-lift: 0 40px 120px rgb(93 55 35 / 22%);
+}
+
+[data-theme="glass-script"] {
+  color-scheme: light;
+  --background: 196 56% 95%;
+  --foreground: 215 28% 13%;
+  --surface: 0 0% 100%;
+  --surface-strong: 198 45% 88%;
+  --muted: 210 13% 43%;
+  --border: 200 32% 78%;
+  --accent: 218 74% 49%;
+  --accent-foreground: 0 0% 100%;
+  --signal: 327 58% 50%;
+  --signal-foreground: 0 0% 100%;
+  --shadow-panel: 0 34px 90px rgb(41 78 105 / 18%);
+  --shadow-lift: 0 46px 130px rgb(34 91 154 / 20%);
+}
+
+[data-theme="ink-theater"] {
+  color-scheme: dark;
+  --background: 260 14% 7%;
+  --foreground: 38 60% 93%;
+  --surface: 258 13% 12%;
+  --surface-strong: 260 12% 18%;
+  --muted: 34 18% 68%;
+  --border: 260 8% 26%;
+  --accent: 351 72% 58%;
+  --accent-foreground: 38 60% 97%;
+  --signal: 43 91% 59%;
+  --signal-foreground: 260 14% 7%;
+  --shadow-panel: 0 30px 100px rgb(0 0 0 / 38%);
+  --shadow-lift: 0 48px 150px rgb(0 0 0 / 48%);
+}
+
+[data-theme="signal-forge"] {
+  color-scheme: dark;
+  --background: 210 30% 6%;
+  --foreground: 180 28% 92%;
+  --surface: 210 28% 10%;
+  --surface-strong: 208 28% 16%;
+  --muted: 190 16% 66%;
+  --border: 204 24% 24%;
+  --accent: 164 87% 45%;
+  --accent-foreground: 210 30% 6%;
+  --signal: 26 92% 57%;
+  --signal-foreground: 210 30% 6%;
+  --shadow-panel: 0 32px 100px rgb(0 0 0 / 42%);
+  --shadow-lift: 0 48px 150px rgb(0 0 0 / 56%);
+}

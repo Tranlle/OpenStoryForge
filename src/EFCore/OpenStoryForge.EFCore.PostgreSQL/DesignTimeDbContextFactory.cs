@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace OpenStoryForge.EFCore.Sqlite;
+namespace OpenStoryForge.EFCore.PostgreSQL;
 
 /// <summary>
 /// 设计时数据库上下文工厂，用于EF Core迁移
@@ -11,7 +11,6 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<PostgreSQL
     public PostgreSQLDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<PostgreSQLDbContext>();
-        // 使用一个虚拟连接字符串，仅用于生成迁移
         optionsBuilder.UseNpgsql("Host=localhost;Database=openstoryforge;Username=postgres;Password=postgres");
         return new PostgreSQLDbContext(optionsBuilder.Options);
     }

@@ -16,4 +16,11 @@
     <Folder Include="Endpoint\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OpenStoryForge.Agents\OpenStoryForge.Agents.csproj" />
+    <ProjectReference Include="..\OpenStoryForge.EFCore\OpenStoryForge.EFCore.csproj" />
+    <ProjectReference Include="..\EFCore\OpenStoryForge.EFCore.Sqlite\OpenStoryForge.EFCore.Sqlite.csproj" />
+    <ProjectReference Include="..\EFCore\OpenStoryForge.EFCore.PostgreSQL\OpenStoryForge.EFCore.PostgreSQL.csproj" />
+  </ItemGroup>
+
 </Project>

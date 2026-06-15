@@ -54,3 +54,19 @@ nunit-*.xml
 project.lock.json
 project.fragment.lock.json
 artifacts/
+
+# Node / frontend
+node_modules/
+dist/
+dist-electron/
+out/
+.vite/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Superpowers visual companion
+.superpowers/
+superpowers/

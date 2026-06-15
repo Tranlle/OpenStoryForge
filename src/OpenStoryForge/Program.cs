@@ -1,17 +1,11 @@
+using OpenStoryForge.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddOpenStoryForgeServices(builder.Configuration);
 
 var app = builder.Build();
 
-//DI注册
-builder.Services.AddSingleton(TimeProvider.System);//TimeProvider
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

@@ -10,6 +10,7 @@
 	
   </Folder>
   <Folder Name="/src/">
+    <Project Path="src/OpenStoryForge.Agents/OpenStoryForge.Agents.csproj" />
     <Project Path="src/OpenStoryForge.Cache/OpenStoryForge.Cache.csproj" Id="191480e1-159c-4e22-8ec4-a8028ff3d85d" />
     <Project Path="src/OpenStoryForge.EFCore/OpenStoryForge.EFCore.csproj" />
     <Project Path="src/OpenStoryForge.Entities/OpenStoryForge.Entities.csproj" />

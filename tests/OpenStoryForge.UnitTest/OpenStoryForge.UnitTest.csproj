@@ -12,6 +12,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Agents.AI" />
+    <PackageReference Include="Microsoft.Agents.AI.OpenAI" />
+    <PackageReference Include="Microsoft.Agents.AI.Workflows" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
@@ -22,6 +25,12 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\OpenStoryForge\OpenStoryForge.csproj" />
+    <ProjectReference Include="..\..\src\OpenStoryForge.EFCore\OpenStoryForge.EFCore.csproj" />
+    <ProjectReference Include="..\..\src\OpenStoryForge.Agents\OpenStoryForge.Agents.csproj" />
   </ItemGroup>
 
 </Project>
