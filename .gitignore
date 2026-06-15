@@ -70,3 +70,4 @@ pnpm-debug.log*
 # Superpowers visual companion
 .superpowers/
 superpowers/
+/templates - 快捷方式.lnk

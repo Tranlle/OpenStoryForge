@@ -1,39 +1,38 @@
-ï»¿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace OpenStoryForge.Entities;
 
 /// <summary>
-/// æ ‡ç­¾å®ä½“ã€‚
+/// ±êÇ©ÊµÌå¡£
 /// </summary>
 public class Tag : AggregateRoot<string>
 {
     /// <summary>
-    /// æ ‡ç­¾åç§°ã€‚
+    /// ±êÇ©Ãû³Æ¡£
     /// </summary>
     [Required]
     [MaxLength(64)]
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
-    /// æ ‡ç­¾ Slugã€‚
+    /// ±êÇ© Slug¡£
     /// </summary>
     [Required]
     [MaxLength(80)]
     public string Slug { get; set; } = string.Empty;
 
     /// <summary>
-    /// æ ‡ç­¾åˆ†ç±»ã€‚
+    /// ±êÇ©·ÖÀà¡£
     /// </summary>
     public TagCategory Category { get; set; } = TagCategory.Genre;
 
     /// <summary>
-    /// æ˜¯å¦ä¸ºç³»ç»Ÿæ ‡ç­¾ã€‚
+    /// ÊÇ·ñÎªÏµÍ³±êÇ©¡£
     /// </summary>
     public bool IsSystem { get; set; }
 
     /// <summary>
-    /// æ ‡ç­¾æè¿°ã€‚
+    /// ±êÇ©ÃèÊö¡£
     /// </summary>
     [MaxLength(500)]
     public string? Description { get; set; }

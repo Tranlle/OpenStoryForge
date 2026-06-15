@@ -1,4 +1,4 @@
-﻿using OpenStoryForge.Cache.Options;
+using OpenStoryForge.Cache.Options;
 
 namespace OpenStoryForge.Cache.Interfaces;
 
@@ -9,8 +9,12 @@ namespace OpenStoryForge.Cache.Interfaces;
 public interface ICache
 {
     Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default);
+
     Task SetAsync<T>(string key, T value, CacheEntryOptions options, CancellationToken cancellationToken = default);
+
     Task RemoveAsync(string key, CancellationToken cancellationToken = default);
+
     Task<bool> ExistsAsync(string key, CancellationToken cancellationToken = default);
+
     Task<ICacheLock?> AcquireLockAsync(string key, TimeSpan timeout, CancellationToken cancellationToken = default);
 }

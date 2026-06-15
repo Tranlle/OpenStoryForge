@@ -1,16 +1,56 @@
 <Project>
-  <PropertyGroup>
-    <!-- 允许预发行版本包 -->
-    <!-- <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile> -->
-    <!-- <RestoreLockedMode Condition="$(ContinuousIntegrationBuild) == 'true'">true</RestoreLockedMode> -->
-    
-    <!-- 忽略预发行版本警告 -->
-    <NoWarn>$(NoWarn);NU1604;NU1903</NoWarn>
-    
-    <!-- 包验证配置 -->
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <WarningsNotAsErrors>NU1604;NU1903</WarningsNotAsErrors>
-  </PropertyGroup>
-  
+	<PropertyGroup>
+		<!-- 基础 C# 质量 -->
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
 
-</Project> 
+		<!-- 启用 .NET Analyzer -->
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<AnalysisMode>Recommended</AnalysisMode>
+
+		<!-- 让 IDE 风格规则进入 build -->
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+		<!-- 不建议一上来 TreatWarningsAsErrors=true，先精确升级关键规则 -->
+		<WarningsAsErrors>
+			$(WarningsAsErrors);
+			IDE0065;
+			IDE0160;
+			IDE0161
+		</WarningsAsErrors>
+
+		<!-- XML 文档：只能约束 public API 缺失文档，不能约束你要求的中英双语 -->
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+		<!-- NuGet 安全审计 -->
+		<NuGetAudit>true</NuGetAudit>
+		<NuGetAuditMode>all</NuGetAuditMode>
+		<NuGetAuditLevel>moderate</NuGetAuditLevel>
+
+		<!-- moderate/high/critical 漏洞作为错误 -->
+		<WarningsAsErrors>
+			$(WarningsAsErrors);
+			NU1902;
+			NU1903;
+			NU1904
+		</WarningsAsErrors>
+
+		<!-- Keep build output actionable for an application codebase. -->
+		<NoWarn>
+			$(NoWarn);
+			CS1591;
+			CS0419;
+			MA0048;
+			MA0051;
+			CA1707;
+			CA1711
+		</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- 全仓库 Analyzer：版本放 Directory.Packages.props -->
+		<!-- PackageReference Include="StyleCop.Analyzers" PrivateAssets="all" ReferenceOutputAssembly="false" / -->
+		<PackageReference Include="Meziantou.Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false" />
+		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" PrivateAssets="all" ReferenceOutputAssembly="false" />
+	</ItemGroup>
+</Project>

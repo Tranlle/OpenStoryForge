@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+
 using OpenStoryForge.Entities;
 using OpenStoryForge.Entities.Tools;
 
@@ -48,13 +49,8 @@ public interface IContext : IDisposable
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
 
-public abstract class MasterDbContext : DbContext, IContext
+public abstract class MasterDbContext(DbContextOptions options) : DbContext(options), IContext
 {
-    protected MasterDbContext(DbContextOptions options)
-        : base(options)
-    {
-    }
-
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<Role> Roles { get; set; } = null!;
     public DbSet<UserRole> UserRoles { get; set; } = null!;
@@ -102,7 +98,7 @@ public abstract class MasterDbContext : DbContext, IContext
             .WithMany()
             .HasForeignKey(department => department.ParentId);
 
-        // TokenUsage 索引（按记录时间查询统计）
+        // TokenUsage 绱㈠紩锛堟寜璁板綍鏃堕棿鏌ヨ缁熻锛?
         modelBuilder.Entity<TokenUsage>(builder =>
         {
             builder.HasIndex(t => t.RecordedAt);
@@ -115,17 +111,17 @@ public abstract class MasterDbContext : DbContext, IContext
             builder.Property(t => t.TotalCost).HasPrecision(18, 8);
         });
 
-        // SystemSetting 唯一键索引
+        // SystemSetting 鍞竴閿储寮?
         modelBuilder.Entity<SystemSetting>()
             .HasIndex(s => s.Key)
             .IsUnique();
 
-        // SkillConfig 名称唯一索引
+        // SkillConfig 鍚嶇О鍞竴绱㈠紩
         modelBuilder.Entity<SkillConfig>()
             .HasIndex(s => s.Name)
             .IsUnique();
 
-        // ModelConfig 名称唯一索引
+        // ModelConfig 鍚嶇О鍞竴绱㈠紩
         modelBuilder.Entity<AiProviderConfig>(builder =>
         {
             builder.HasIndex(p => p.Name).IsUnique();
@@ -150,77 +146,77 @@ public abstract class MasterDbContext : DbContext, IContext
         modelBuilder.Entity<ModelConfig>()
             .HasIndex(m => new { m.AiProviderId, m.ModelId });
 
-        // ChatSession 用户和平台组合唯一索引
+        // ChatSession 鐢ㄦ埛鍜屽钩鍙扮粍鍚堝敮涓€绱㈠紩
         modelBuilder.Entity<ChatSession>()
             .HasIndex(s => new { s.UserId, s.Platform })
             .IsUnique();
 
-        // ChatSession 状态索引（用于查询活跃会话）
+        // ChatSession 鐘舵€佺储寮曪紙鐢ㄤ簬鏌ヨ娲昏穬浼氳瘽锛?
         modelBuilder.Entity<ChatSession>()
             .HasIndex(s => s.State);
 
-        // ChatMessageHistory 与 ChatSession 关联
+        // ChatMessageHistory 涓?ChatSession 鍏宠仈
         modelBuilder.Entity<ChatMessageHistory>()
             .HasOne(m => m.Session)
             .WithMany(s => s.Messages)
             .HasForeignKey(m => m.SessionId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // ChatMessageHistory 会话ID和时间戳索引（用于按时间查询消息）
+        // ChatMessageHistory 浼氳瘽ID鍜屾椂闂存埑绱㈠紩锛堢敤浜庢寜鏃堕棿鏌ヨ娑堟伅锛?
         modelBuilder.Entity<ChatMessageHistory>()
             .HasIndex(m => new { m.SessionId, m.MessageTimestamp });
 
-        // ChatShareSnapshot ShareId 唯一索引
+        // ChatShareSnapshot ShareId 鍞竴绱㈠紩
         modelBuilder.Entity<ChatShareSnapshot>()
             .HasIndex(s => s.ShareId)
             .IsUnique();
 
-        // ChatShareSnapshot 过期时间索引
+        // ChatShareSnapshot 杩囨湡鏃堕棿绱㈠紩
         modelBuilder.Entity<ChatShareSnapshot>()
             .HasIndex(s => s.ExpiresAt);
 
-        // ChatProviderConfig 平台唯一索引
+        // ChatProviderConfig 骞冲彴鍞竴绱㈠紩
         modelBuilder.Entity<ChatProviderConfig>()
             .HasIndex(c => c.Platform)
             .IsUnique();
 
-        // ChatMessageQueue 状态和计划时间索引（用于出队处理）
+        // ChatMessageQueue 鐘舵€佸拰璁″垝鏃堕棿绱㈠紩锛堢敤浜庡嚭闃熷鐞嗭級
         modelBuilder.Entity<ChatMessageQueue>()
             .HasIndex(q => new { q.Status, q.ScheduledAt });
 
-        // ChatMessageQueue 平台和目标用户索引（用于按用户查询队列）
+        // ChatMessageQueue 骞冲彴鍜岀洰鏍囩敤鎴风储寮曪紙鐢ㄤ簬鎸夌敤鎴锋煡璇㈤槦鍒楋級
         modelBuilder.Entity<ChatMessageQueue>()
             .HasIndex(q => new { q.Platform, q.TargetUserId });
 
-        // UserDepartment 唯一索引（同一用户在同一部门只能有一条记录）
+        // UserDepartment 鍞竴绱㈠紩锛堝悓涓€鐢ㄦ埛鍦ㄥ悓涓€閮ㄩ棬鍙兘鏈変竴鏉¤褰曪級
         modelBuilder.Entity<UserDepartment>()
             .HasIndex(ud => new { ud.UserId, ud.DepartmentId })
             .IsUnique();
 
-        // UserPreferenceCache 用户ID唯一索引
+        // UserPreferenceCache 鐢ㄦ埛ID鍞竴绱㈠紩
         modelBuilder.Entity<UserPreferenceCache>()
             .HasIndex(p => p.UserId)
             .IsUnique();
 
-        // ChatApp AppId唯一索引
+        // ChatApp AppId鍞竴绱㈠紩
         modelBuilder.Entity<ChatApp>()
             .HasIndex(a => a.AppId)
             .IsUnique();
 
-        // ChatApp 用户ID索引（用于查询用户的应用列表）
+        // ChatApp 鐢ㄦ埛ID绱㈠紩锛堢敤浜庢煡璇㈢敤鎴风殑搴旂敤鍒楄〃锛?
         modelBuilder.Entity<ChatApp>()
             .HasIndex(a => a.UserId);
 
-        // AppStatistics AppId和日期组合唯一索引
+        // AppStatistics AppId鍜屾棩鏈熺粍鍚堝敮涓€绱㈠紩
         modelBuilder.Entity<AppStatistics>()
             .HasIndex(s => new { s.AppId, s.Date })
             .IsUnique();
 
-        // ChatLog AppId索引（用于按应用查询提问记录）
+        // ChatLog AppId绱㈠紩锛堢敤浜庢寜搴旂敤鏌ヨ鎻愰棶璁板綍锛?
         modelBuilder.Entity<ChatLog>()
             .HasIndex(l => l.AppId);
 
-        // ChatLog 创建时间索引（用于按时间范围查询）
+        // ChatLog 鍒涘缓鏃堕棿绱㈠紩锛堢敤浜庢寜鏃堕棿鑼冨洿鏌ヨ锛?
         modelBuilder.Entity<ChatLog>()
             .HasIndex(l => l.CreatedAt);
 

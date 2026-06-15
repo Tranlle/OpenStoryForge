@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 using OpenStoryForge.EFCore;
 using OpenStoryForge.Extensions;
 
@@ -12,7 +13,7 @@ public class ServiceCollectionExtensionsTests
     {
         ServiceCollection services = new ServiceCollection();
         IConfigurationRoot configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?>
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase)
             {
                 ["Database:Provider"] = "Sqlite",
                 ["Database:ConnectionString"] = "Data Source=test-startup.db"

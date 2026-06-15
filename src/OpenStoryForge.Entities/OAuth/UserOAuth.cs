@@ -79,7 +79,7 @@ public class UserOAuth : AggregateRoot<string>
     /// <summary>
     /// 是否已绑定（true表示已绑定到现有用户，false表示临时绑定）
     /// </summary>
-    public bool IsBound { get; set; } = false;
+    public bool IsBound { get; set; }
 
     /// <summary>
     /// 最后登录时间

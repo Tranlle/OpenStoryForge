@@ -43,7 +43,7 @@ public abstract class AggregateRoot<TKey> : IAuditableEntity
     /// <summary>
     /// 是否已删除（软删除）
     /// </summary>
-    public bool IsDeleted { get; set; } = false;
+    public bool IsDeleted { get; set; }
 
     /// <summary>
     /// 版本号（用于乐观并发控制）

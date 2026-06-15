@@ -23,15 +23,15 @@ public class AppStatistics : AggregateRoot<Guid>
     /// <summary>
     /// 请求总数
     /// </summary>
-    public long RequestCount { get; set; } = 0;
+    public long RequestCount { get; set; }
 
     /// <summary>
     /// 输入Token数量
     /// </summary>
-    public long InputTokens { get; set; } = 0;
+    public long InputTokens { get; set; }
 
     /// <summary>
     /// 输出Token数量
     /// </summary>
-    public long OutputTokens { get; set; } = 0;
+    public long OutputTokens { get; set; }
 }

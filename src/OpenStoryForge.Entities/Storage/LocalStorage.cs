@@ -25,7 +25,7 @@ public class LocalStorage : AggregateRoot<string>
     /// <summary>
     /// 文件大小（字节）
     /// </summary>
-    public long FileSize { get; set; } = 0;
+    public long FileSize { get; set; }
 
     /// <summary>
     /// 文件类型（MIME类型）
@@ -81,12 +81,12 @@ public class LocalStorage : AggregateRoot<string>
     /// <summary>
     /// 是否公开访问
     /// </summary>
-    public bool IsPublic { get; set; } = false;
+    public bool IsPublic { get; set; }
 
     /// <summary>
     /// 访问次数
     /// </summary>
-    public int AccessCount { get; set; } = 0;
+    public int AccessCount { get; set; }
 
     /// <summary>
     /// 最后访问时间

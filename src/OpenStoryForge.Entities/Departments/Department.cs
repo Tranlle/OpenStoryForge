@@ -30,7 +30,7 @@ public class Department : AggregateRoot<string>
     /// <summary>
     /// 排序号
     /// </summary>
-    public int SortOrder { get; set; } = 0;
+    public int SortOrder { get; set; }
 
     /// <summary>
     /// 是否启用

@@ -1,10 +1,12 @@
 using OpenStoryForge.Extensions;
 
-var builder = WebApplication.CreateBuilder(args);
+#pragma warning disable IDE0211 // 转换为 'Program.Main' 样式程序
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+#pragma warning restore IDE0211 // 转换为 'Program.Main' 样式程序
 
 builder.Services.AddOpenStoryForgeServices(builder.Configuration);
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
@@ -17,4 +19,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync().ConfigureAwait(false);

@@ -50,7 +50,7 @@ public class ChatMessageQueue : AggregateRoot<Guid>
     /// <summary>
     /// 重试次数
     /// </summary>
-    public int RetryCount { get; set; } = 0;
+    public int RetryCount { get; set; }
 
     /// <summary>
     /// 计划执行时间

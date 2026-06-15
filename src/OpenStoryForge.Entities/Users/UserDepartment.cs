@@ -25,7 +25,7 @@ public class UserDepartment : AggregateRoot<string>
     /// <summary>
     /// 是否为部门主管
     /// </summary>
-    public bool IsManager { get; set; } = false;
+    public bool IsManager { get; set; }
 
     /// <summary>
     /// 用户导航属性

@@ -49,7 +49,7 @@ public class User : AggregateRoot<string>
     /// <summary>
     /// 是否为系统用户
     /// </summary>
-    public bool IsSystem { get; set; } = false;
+    public bool IsSystem { get; set; }
 
     /// <summary>
     /// 最后登录时间
@@ -66,11 +66,11 @@ public class User : AggregateRoot<string>
     /// 用户角色关联集合
     /// </summary>
     [NotMapped]
-    public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+    public virtual ICollection<UserRole> UserRoles { get; set; } = [];
 
     /// <summary>
     /// OAuth登录关联集合
     /// </summary>
     [NotMapped]
-    public virtual ICollection<UserOAuth> UserOAuths { get; set; } = new List<UserOAuth>();
+    public virtual ICollection<UserOAuth> UserOAuths { get; set; } = [];
 }

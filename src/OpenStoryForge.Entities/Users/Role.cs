@@ -29,11 +29,11 @@ public class Role : AggregateRoot<string>
     /// <summary>
     /// 是否为系统角色（系统角色不能删除和修改）
     /// </summary>
-    public bool IsSystemRole { get; set; } = false;
+    public bool IsSystemRole { get; set; }
 
     /// <summary>
     /// 用户角色关联集合
     /// </summary>
     [NotMapped]
-    public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+    public virtual ICollection<UserRole> UserRoles { get; set; } = [];
 }

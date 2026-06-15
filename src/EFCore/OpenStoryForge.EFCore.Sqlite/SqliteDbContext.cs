@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+
 using OpenStoryForge.EFCore.DbInterceptor;
 
 namespace OpenStoryForge.EFCore.Sqlite;
@@ -9,14 +10,9 @@ public class SqliteDbContext(DbContextOptions<SqliteDbContext> options)
 {
 }
 
-public class SqliteContextFactory : IContextFactory
+public class SqliteContextFactory(IDbContextFactory<SqliteDbContext> factory) : IContextFactory
 {
-    private readonly IDbContextFactory<SqliteDbContext> _factory;
-
-    public SqliteContextFactory(IDbContextFactory<SqliteDbContext> factory)
-    {
-        _factory = factory ?? throw new ArgumentNullException(nameof(factory));
-    }
+    private readonly IDbContextFactory<SqliteDbContext> _factory = factory ?? throw new ArgumentNullException(nameof(factory));
 
     public IContext CreateContext()
     {

@@ -1,9 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
 using System.ClientModel.Primitives;
+
+using Microsoft.Extensions.Logging;
 
 namespace OpenStoryForge.Agents.ClientLog;
 
-internal class ClientLogging
+internal static class ClientLogging
 {
     /// <summary>
     /// 初始化 ClientLoggingOptions 
@@ -13,14 +14,14 @@ internal class ClientLogging
     /// <returns></returns>
     public static ClientLoggingOptions InitialClientLoggingOptions(ILoggerFactory loggerFactory)
     {
-        var loggingOptions = new ClientLoggingOptions();
-
-        loggingOptions.LoggerFactory = loggerFactory;
-
-        loggingOptions.EnableLogging = true;                    // 总开关：启用日志
-        loggingOptions.EnableMessageLogging = true;             // 记录请求/响应的行与头
-        loggingOptions.EnableMessageContentLogging = true;      // 记录请求/响应的完整内容
-        loggingOptions.MessageContentSizeLimit = 64 * 1024;     // 增大到 64KB
+        ClientLoggingOptions loggingOptions = new()
+        {
+            LoggerFactory = loggerFactory,
+            EnableLogging = true,
+            EnableMessageLogging = true,
+            EnableMessageContentLogging = true,
+            MessageContentSizeLimit = 64 * 1024,
+        };
 
         // 可选：白名单（避免默认打码影响诊断）
         loggingOptions.AllowedHeaderNames.Add("Content-Type");

@@ -1,77 +1,86 @@
 root = true
 
-[*.cs]
-#### 基础格式 ####
+[*]
 charset = utf-8
-end_of_line = crlf
 insert_final_newline = true
 indent_style = space
 indent_size = 4
 tab_width = 4
+trim_trailing_whitespace = true
+
+[*.cs]
+#### 基础格式 ####
+end_of_line = crlf
+max_line_length = 120
 
 
 #### using 规则 ####
 # using 放 namespace 外面
-csharp_using_directive_placement = outside_namespace
+csharp_using_directive_placement = outside_namespace:error
 
-# System using 是否排在前面
+# System using 排在前面
 dotnet_sort_system_directives_first = true
 
-# using 分组之间是否空行
+# using 分组之间空行
 dotnet_separate_import_directive_groups = true
 
-dotnet_diagnostic.IDE0005.severity = warning   # 删除无用 using
-dotnet_diagnostic.IDE0065.severity = error     # using 位置错误直接报错
+# 删除无用 using
+dotnet_diagnostic.IDE0005.severity = warning
 
+# using 位置错误
+dotnet_diagnostic.IDE0065.severity = error
 
 #### namespace 风格 ####
-# file_scoped: namespace MyApp;
-# block_scoped: namespace MyApp { }
-# namespace不使用花括号作为边界
+# namespace 不使用花括号作为边界：namespace MyApp;
 csharp_style_namespace_declarations = file_scoped:error
 
 dotnet_diagnostic.IDE0160.severity = error
 dotnet_diagnostic.IDE0161.severity = error
 
 
-#### var 规则：偏保守，能看清类型 ####
-csharp_style_var_for_built_in_types = false
-csharp_style_var_when_type_is_apparent = false
-csharp_style_var_elsewhere = false
+#### var 规则 ####
+# 偏保守：尽量显式类型，方便审查和 Agent 生成稳定代码
+csharp_style_var_for_built_in_types = false:warning
+csharp_style_var_when_type_is_apparent = false:warning
+csharp_style_var_elsewhere = false:warning
 
 dotnet_diagnostic.IDE0008.severity = warning
 
 
-#### this. 规则：不强制 this. ####
-dotnet_style_qualification_for_field = false
-dotnet_style_qualification_for_property = false
-dotnet_style_qualification_for_method = false
-dotnet_style_qualification_for_event = false
+#### this. 规则 ####
+# 不强制 this.，并提示移除多余 this.
+dotnet_style_qualification_for_field = false:warning
+dotnet_style_qualification_for_property = false:warning
+dotnet_style_qualification_for_method = false:warning
+dotnet_style_qualification_for_event = false:warning
+
+dotnet_diagnostic.IDE0003.severity = warning
 
 
 #### 大括号规则 ####
 # if / for / while / using 等都要求大括号
-csharp_prefer_braces = true
+csharp_prefer_braces = true:warning
 
 dotnet_diagnostic.IDE0011.severity = warning
 
 
 #### 类型关键字 ####
 # 推荐 string/int/bool，而不是 String/Int32/Boolean
-dotnet_style_predefined_type_for_locals_parameters_members = true
-dotnet_style_predefined_type_for_member_access = true
+dotnet_style_predefined_type_for_locals_parameters_members = true:warning
+dotnet_style_predefined_type_for_member_access = true:warning
 
 dotnet_diagnostic.IDE0049.severity = warning
 
 
 #### 大括号换行 ####
-# all 表示类型、方法、属性、控制块等 open brace 都换行
+# Allman 风格
 csharp_new_line_before_open_brace = all
 
 csharp_new_line_before_else = true
 csharp_new_line_before_catch = true
 csharp_new_line_before_finally = true
 csharp_new_line_between_query_expression_clauses = true
+
 
 #### 缩进 ####
 csharp_indent_block_contents = true
@@ -80,64 +89,255 @@ csharp_indent_case_contents = true
 csharp_indent_case_contents_when_block = true
 csharp_indent_switch_labels = true
 
+
 #### 空格 ####
 csharp_space_after_cast = false
+csharp_space_after_colon_in_inheritance_clause = true
+csharp_space_before_colon_in_inheritance_clause = true
 csharp_space_after_comma = true
 csharp_space_before_comma = false
 csharp_space_after_dot = false
 csharp_space_before_dot = false
-csharp_space_around_binary_operators = before_and_after
 csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_around_binary_operators = before_and_after
 csharp_space_between_parentheses = false
 csharp_space_between_square_brackets = false
 
+
 #### 单行保留 ####
-csharp_preserve_single_line_blocks = false
-csharp_preserve_single_line_statements = false
+csharp_preserve_single_line_blocks = true
+csharp_preserve_single_line_statements = true
+
+# 格式化违规
+dotnet_diagnostic.IDE0055.severity = warning
 
 
-#### 命名规则 ####
+#### 对象 / 集合初始化器 ####
+dotnet_style_object_initializer = true:warning
+dotnet_style_collection_initializer = true:warning
 
-# 接口必须 I 开头
-dotnet_naming_rule.interface_should_start_with_i.severity = error
-dotnet_naming_rule.interface_should_start_with_i.symbols = interfaces
-dotnet_naming_rule.interface_should_start_with_i.style = interface_prefix
+dotnet_diagnostic.IDE0017.severity = warning
+dotnet_diagnostic.IDE0028.severity = warning
 
-dotnet_naming_symbols.interfaces.applicable_kinds = interface
-dotnet_naming_symbols.interfaces.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+
+#### readonly / static / 简化表达式 ####
+dotnet_style_readonly_field = true:warning
+csharp_prefer_static_local_function = true:warning
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+dotnet_style_prefer_simplified_interpolation = true:suggestion
+
+dotnet_diagnostic.IDE0044.severity = warning
+dotnet_diagnostic.IDE0062.severity = warning
+dotnet_diagnostic.IDE0075.severity = suggestion
+dotnet_diagnostic.IDE0071.severity = suggestion
+
+
+#### null / coalesce / pattern matching ####
+dotnet_style_null_propagation = true:warning
+dotnet_style_coalesce_expression = true:warning
+
+csharp_style_pattern_matching_over_as_with_null_check = true:warning
+csharp_style_pattern_matching_over_is_with_cast_check = true:warning
+csharp_style_prefer_pattern_matching = true:warning
+csharp_style_prefer_not_pattern = true:warning
+csharp_style_prefer_switch_expression = true:suggestion
+
+dotnet_diagnostic.IDE0031.severity = warning
+dotnet_diagnostic.IDE0029.severity = warning
+dotnet_diagnostic.IDE0030.severity = warning
+dotnet_diagnostic.IDE0066.severity = suggestion
+
+
+#### 现代 C# 语法 ####
+csharp_style_implicit_object_creation_when_type_is_apparent = true:suggestion
+csharp_style_prefer_index_operator = true:suggestion
+csharp_style_prefer_range_operator = true:suggestion
+csharp_style_prefer_tuple_swap = true:suggestion
+csharp_style_prefer_utf8_string_literals = true:suggestion
+
+# 框架/库项目里推荐主构造函数和顶级语句
+csharp_style_prefer_primary_constructors = true:suggestion
+csharp_style_prefer_top_level_statements = true:suggestion
+
+dotnet_diagnostic.IDE0090.severity = suggestion
+dotnet_diagnostic.IDE0056.severity = suggestion
+dotnet_diagnostic.IDE0057.severity = suggestion
+dotnet_diagnostic.IDE0180.severity = suggestion
+
+
+#### 未使用代码 / 多余代码 ####
+dotnet_diagnostic.IDE0051.severity = warning
+dotnet_diagnostic.IDE0052.severity = warning
+dotnet_diagnostic.IDE0059.severity = warning
+dotnet_diagnostic.IDE0079.severity = warning
+
+
+#### 字符串比较 ####
+# 要求显式 StringComparison
+dotnet_diagnostic.CA1307.severity = warning
+
+# 推荐 ordinal StringComparison
+dotnet_diagnostic.CA1309.severity = warning
+
+# 避免隐式区域性字符串比较
+dotnet_diagnostic.CA1310.severity = warning
+
+
+#### 异常规则 ####
+# 重新 throw 时保留堆栈
+dotnet_diagnostic.CA2200.severity = warning
+
+# 参数异常使用正确参数名
+dotnet_diagnostic.CA2208.severity = warning
+
+# 避免吞掉宽泛 Exception
+dotnet_diagnostic.CA1031.severity = warning
+
+
+#### 异步 / CancellationToken ####
+# 传递 CancellationToken
+dotnet_diagnostic.CA2016.severity = warning
+
+# 有 async API 时避免调用同步 API
+dotnet_diagnostic.CA1849.severity = warning
+
+
+#### 集合 / LINQ ####
+# 可能多次枚举 IEnumerable
+dotnet_diagnostic.CA1851.severity = warning
+
+
+#### 命名规则总开关 ####
+# 命名规则统一走 IDE1006，想 build 里生效必须配置这个
+dotnet_diagnostic.IDE1006.severity = warning
+
+
+#### 命名风格定义 ####
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+dotnet_naming_style.camel_case.capitalization = camel_case
 
 dotnet_naming_style.interface_prefix.required_prefix = I
 dotnet_naming_style.interface_prefix.capitalization = pascal_case
 
+dotnet_naming_style.private_field_style.required_prefix = _
+dotnet_naming_style.private_field_style.capitalization = camel_case
+
+dotnet_naming_style.type_parameter_style.required_prefix = T
+dotnet_naming_style.type_parameter_style.capitalization = pascal_case
+
+dotnet_naming_style.async_suffix.required_suffix = Async
+dotnet_naming_style.async_suffix.capitalization = pascal_case
+
+
+#### 命名对象组 ####
+dotnet_naming_symbols.namespaces.applicable_kinds = namespace
+dotnet_naming_symbols.namespaces.applicable_accessibilities = *
+
+dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum, delegate
+dotnet_naming_symbols.types.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+dotnet_naming_symbols.interfaces.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+
+dotnet_naming_symbols.members.applicable_kinds = method, property, event
+dotnet_naming_symbols.members.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+
+dotnet_naming_symbols.enum_members.applicable_kinds = field
+dotnet_naming_symbols.enum_members.applicable_accessibilities = public
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+dotnet_naming_symbols.constants.applicable_kinds = field, local
+dotnet_naming_symbols.constants.applicable_accessibilities = *
+dotnet_naming_symbols.constants.required_modifiers = const
+
+dotnet_naming_symbols.parameters.applicable_kinds = parameter
+dotnet_naming_symbols.parameters.applicable_accessibilities = *
+
+dotnet_naming_symbols.locals.applicable_kinds = local
+dotnet_naming_symbols.locals.applicable_accessibilities = local
+
+dotnet_naming_symbols.local_functions.applicable_kinds = local_function
+dotnet_naming_symbols.local_functions.applicable_accessibilities = local
+
+dotnet_naming_symbols.type_parameters.applicable_kinds = type_parameter
+dotnet_naming_symbols.type_parameters.applicable_accessibilities = *
+
+dotnet_naming_symbols.async_methods.applicable_kinds = method
+dotnet_naming_symbols.async_methods.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.async_methods.required_modifiers = async
+
+
+#### 命名规则绑定 ####
+# namespace PascalCase
+dotnet_naming_rule.namespaces_should_be_pascal_case.severity = warning
+dotnet_naming_rule.namespaces_should_be_pascal_case.symbols = namespaces
+dotnet_naming_rule.namespaces_should_be_pascal_case.style = pascal_case
+
+# 接口必须 I 开头
+dotnet_naming_rule.interfaces_should_start_with_i.severity = error
+dotnet_naming_rule.interfaces_should_start_with_i.symbols = interfaces
+dotnet_naming_rule.interfaces_should_start_with_i.style = interface_prefix
 
 # 类型必须 PascalCase
 dotnet_naming_rule.types_should_be_pascal_case.severity = error
 dotnet_naming_rule.types_should_be_pascal_case.symbols = types
 dotnet_naming_rule.types_should_be_pascal_case.style = pascal_case
 
-dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum, delegate
-dotnet_naming_symbols.types.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+# 方法、属性、事件 PascalCase
+dotnet_naming_rule.members_should_be_pascal_case.severity = warning
+dotnet_naming_rule.members_should_be_pascal_case.symbols = members
+dotnet_naming_rule.members_should_be_pascal_case.style = pascal_case
 
-dotnet_naming_style.pascal_case.capitalization = pascal_case
+# 枚举成员 PascalCase
+dotnet_naming_rule.enum_members_should_be_pascal_case.severity = warning
+dotnet_naming_rule.enum_members_should_be_pascal_case.symbols = enum_members
+dotnet_naming_rule.enum_members_should_be_pascal_case.style = pascal_case
 
-
-# 私有字段使用 _camelCase
-dotnet_naming_rule.private_fields_should_be_camel_case_with_underscore.severity = warning
-dotnet_naming_rule.private_fields_should_be_camel_case_with_underscore.symbols = private_fields
-dotnet_naming_rule.private_fields_should_be_camel_case_with_underscore.style = private_field_style
-
-dotnet_naming_symbols.private_fields.applicable_kinds = field
-dotnet_naming_symbols.private_fields.applicable_accessibilities = private
-
-dotnet_naming_style.private_field_style.required_prefix = _
-dotnet_naming_style.private_field_style.capitalization = camel_case
-
-
-# 常量使用 PascalCase
+# 常量 PascalCase
 dotnet_naming_rule.constants_should_be_pascal_case.severity = warning
 dotnet_naming_rule.constants_should_be_pascal_case.symbols = constants
 dotnet_naming_rule.constants_should_be_pascal_case.style = pascal_case
 
-dotnet_naming_symbols.constants.applicable_kinds = field, local
-dotnet_naming_symbols.constants.required_modifiers = const
+# 私有字段 _camelCase，包括 readonly 和 static readonly 字段
+dotnet_naming_rule.private_fields_should_be_camel_case_with_underscore.severity = warning
+dotnet_naming_rule.private_fields_should_be_camel_case_with_underscore.symbols = private_fields
+dotnet_naming_rule.private_fields_should_be_camel_case_with_underscore.style = private_field_style
 
+# 参数 camelCase
+dotnet_naming_rule.parameters_should_be_camel_case.severity = warning
+dotnet_naming_rule.parameters_should_be_camel_case.symbols = parameters
+dotnet_naming_rule.parameters_should_be_camel_case.style = camel_case
+
+# 局部变量 camelCase
+dotnet_naming_rule.locals_should_be_camel_case.severity = warning
+dotnet_naming_rule.locals_should_be_camel_case.symbols = locals
+dotnet_naming_rule.locals_should_be_camel_case.style = camel_case
+
+# 局部函数 PascalCase
+dotnet_naming_rule.local_functions_should_be_pascal_case.severity = warning
+dotnet_naming_rule.local_functions_should_be_pascal_case.symbols = local_functions
+dotnet_naming_rule.local_functions_should_be_pascal_case.style = pascal_case
+
+# 泛型类型参数 T 开头
+dotnet_naming_rule.type_parameters_should_start_with_t.severity = warning
+dotnet_naming_rule.type_parameters_should_start_with_t.symbols = type_parameters
+dotnet_naming_rule.type_parameters_should_start_with_t.style = type_parameter_style
+
+# async 方法 Async 结尾
+dotnet_naming_rule.async_methods_should_end_with_async.severity = warning
+dotnet_naming_rule.async_methods_should_end_with_async.symbols = async_methods
+dotnet_naming_rule.async_methods_should_end_with_async.style = async_suffix
+
+
+#### 生成代码排除 ####
+[*.{g.cs,generated.cs,Designer.cs}]
+generated_code = true
+
+[**/Migrations/*.cs]
+generated_code = true
+
+[**/obj/**/*.cs]
+generated_code = true

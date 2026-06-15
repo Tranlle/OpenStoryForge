@@ -10,7 +10,7 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<SqliteDbCo
 {
     public SqliteDbContext CreateDbContext(string[] args)
     {
-        var optionsBuilder = new DbContextOptionsBuilder<SqliteDbContext>();
+        DbContextOptionsBuilder<SqliteDbContext> optionsBuilder = new DbContextOptionsBuilder<SqliteDbContext>();
         // 使用一个虚拟连接字符串，仅用于生成迁移
         optionsBuilder.UseSqlite("Data Source=openstoryforge.db");
         return new SqliteDbContext(optionsBuilder.Options);

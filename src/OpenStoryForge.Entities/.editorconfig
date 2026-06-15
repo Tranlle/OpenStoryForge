@@ -1,0 +1,5 @@
+[*.cs]
+
+# Entities 项目不要求 namespace 匹配文件夹结构
+dotnet_style_namespace_match_folder = false:none
+dotnet_diagnostic.IDE0130.severity = none

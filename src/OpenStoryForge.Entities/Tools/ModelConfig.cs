@@ -46,7 +46,7 @@ public class ModelConfig : AggregateRoot<string>
     /// <summary>
     /// 是否为默认模型
     /// </summary>
-    public bool IsDefault { get; set; } = false;
+    public bool IsDefault { get; set; }
 
     /// <summary>
     /// 是否启用

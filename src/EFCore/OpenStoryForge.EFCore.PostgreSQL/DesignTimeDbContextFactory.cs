@@ -10,7 +10,7 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<PostgreSQL
 {
     public PostgreSQLDbContext CreateDbContext(string[] args)
     {
-        var optionsBuilder = new DbContextOptionsBuilder<PostgreSQLDbContext>();
+        DbContextOptionsBuilder<PostgreSQLDbContext> optionsBuilder = new DbContextOptionsBuilder<PostgreSQLDbContext>();
         optionsBuilder.UseNpgsql("Host=localhost;Database=openstoryforge;Username=postgres;Password=postgres");
         return new PostgreSQLDbContext(optionsBuilder.Options);
     }

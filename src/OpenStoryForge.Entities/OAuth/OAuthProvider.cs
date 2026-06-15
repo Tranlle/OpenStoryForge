@@ -92,11 +92,11 @@ public class OAuthProvider : AggregateRoot<string>
     /// <summary>
     /// 是否需要邮箱验证
     /// </summary>
-    public bool RequireEmailVerification { get; set; } = false;
+    public bool RequireEmailVerification { get; set; }
 
     /// <summary>
     /// OAuth用户关联集合
     /// </summary>
     [NotMapped]
-    public virtual ICollection<UserOAuth> UserOAuths { get; set; } = new List<UserOAuth>();
+    public virtual ICollection<UserOAuth> UserOAuths { get; set; } = [];
 }

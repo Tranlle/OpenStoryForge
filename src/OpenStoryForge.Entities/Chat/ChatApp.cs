@@ -51,7 +51,7 @@ public class ChatApp : AggregateRoot<Guid>
     /// <summary>
     /// 是否启用域名校验
     /// </summary>
-    public bool EnableDomainValidation { get; set; } = false;
+    public bool EnableDomainValidation { get; set; }
 
     /// <summary>
     /// 允许的域名列表（JSON数组）

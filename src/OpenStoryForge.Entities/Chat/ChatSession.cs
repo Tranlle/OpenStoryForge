@@ -42,5 +42,5 @@ public class ChatSession : AggregateRoot<Guid>
     /// <summary>
     /// 关联的消息历史
     /// </summary>
-    public virtual ICollection<ChatMessageHistory> Messages { get; set; } = new List<ChatMessageHistory>();
+    public virtual ICollection<ChatMessageHistory> Messages { get; set; } = [];
 }

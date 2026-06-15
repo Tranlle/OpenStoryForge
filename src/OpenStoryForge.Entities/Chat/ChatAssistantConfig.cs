@@ -11,7 +11,7 @@ public class ChatAssistantConfig : AggregateRoot<Guid>
     /// <summary>
     /// 是否启用对话助手功能
     /// </summary>
-    public bool IsEnabled { get; set; } = false;
+    public bool IsEnabled { get; set; }
 
     /// <summary>
     /// 启用的模型ID列表（JSON数组）
@@ -40,5 +40,5 @@ public class ChatAssistantConfig : AggregateRoot<Guid>
     /// <summary>
     /// 是否启用图片上传功能
     /// </summary>
-    public bool EnableImageUpload { get; set; } = false;
+    public bool EnableImageUpload { get; set; }
 }

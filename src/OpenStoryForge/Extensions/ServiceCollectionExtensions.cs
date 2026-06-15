@@ -18,7 +18,7 @@ public static class ServiceCollectionExtensions
             .AddOptions<DatabaseOptions>()
             .Bind(configuration.GetSection(DatabaseOptions.SectionName));
 
-        var databaseOptions = configuration
+        DatabaseOptions databaseOptions = configuration
             .GetSection(DatabaseOptions.SectionName)
             .Get<DatabaseOptions>()
             ?? throw new InvalidOperationException("Database configuration is required.");
