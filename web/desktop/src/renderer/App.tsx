@@ -1,37 +1,42 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { AppShell } from "@renderer/components/layout/app-shell";
-import { type ThemeId } from "@renderer/components/primitives/theme-switcher";
+import { buildProjectTree, createConversationRecord, mockConversations } from "@renderer/features/home/home.data";
 import { HomePage } from "@renderer/features/home/home-page";
-
-const themeStorageKey = "openstoryforge.desktop.theme";
-
-function readInitialTheme(): ThemeId {
-  const stored = window.localStorage.getItem(themeStorageKey);
-
-  if (
-    stored === "paper-atelier" ||
-    stored === "glass-script" ||
-    stored === "ink-theater" ||
-    stored === "signal-forge"
-  ) {
-    return stored;
-  }
-
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "ink-theater" : "paper-atelier";
-}
+import type { CreateConversationInput } from "@renderer/features/home/home.types";
+import { useThemeState } from "@renderer/use-theme-state";
+import { useWorkspaceState } from "@renderer/use-workspace-state";
 
 export function App(): JSX.Element {
-  const [theme, setTheme] = useState<ThemeId>(readInitialTheme);
+  const { setTheme, theme } = useThemeState();
+  const [conversations, setConversations] = useState(mockConversations);
+  const { activeNav, handleNavigate, handleOpenConversation, selectedConversation, selectedConversationId, workspaceMode } =
+    useWorkspaceState(conversations);
 
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    window.localStorage.setItem(themeStorageKey, theme);
-  }, [theme]);
+  const projectTree = useMemo(() => buildProjectTree(conversations), [conversations]);
+
+  const handleCreateConversation = (input: CreateConversationInput): void => {
+    const nextConversation = createConversationRecord(input);
+
+    setConversations((current) => [nextConversation, ...current]);
+    handleOpenConversation(nextConversation.id);
+  };
 
   return (
-    <AppShell theme={theme} onThemeChange={setTheme}>
-      <HomePage />
+    <AppShell
+      activeNav={activeNav}
+      onNavigate={handleNavigate}
+      onSelectConversation={handleOpenConversation}
+      projectTree={projectTree}
+      selectedConversationId={selectedConversationId}
+      theme={theme}
+      onThemeChange={setTheme}
+    >
+      <HomePage
+        conversation={selectedConversation}
+        onCreateConversation={handleCreateConversation}
+        workspaceMode={workspaceMode}
+      />
     </AppShell>
   );
 }

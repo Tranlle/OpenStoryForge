@@ -2,8 +2,8 @@ import { Maximize2, Minus, PanelTop, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import { ThemeSwitcher, type ThemeId } from "@renderer/components/primitives/theme-switcher";
-import type { OpenStoryForgeWindowState } from "@renderer/vite-env";
 import { cn } from "@renderer/lib/utils";
+import type { OpenStoryForgeWindowState } from "@renderer/vite-env";
 
 type RuntimeInfo = ReturnType<NonNullable<Window["openStoryForge"]>["getAppInfo"]>;
 
@@ -106,9 +106,7 @@ export function WindowTitleBar({ onThemeChange, theme }: WindowTitleBarProps): J
           <PanelTop aria-hidden="true" className="h-3.5 w-3.5" />
         </div>
         <div className="min-w-0">
-          <div className="truncate font-display text-[13px] font-black leading-4 tracking-normal">
-            OpenStoryForge
-          </div>
+          <div className="truncate font-display text-[13px] font-black leading-4 tracking-normal">OpenStoryForge</div>
           <div className="truncate text-[11px] font-medium leading-4 text-muted">
             {platformLabel[appInfo.platform] ?? "浏览器"} 预览 · 后端暂未连接
           </div>
@@ -146,16 +144,11 @@ export function WindowTitleBar({ onThemeChange, theme }: WindowTitleBarProps): J
       ) : hasWindowControls ? (
         <div className="window-no-drag absolute right-4 flex items-center gap-3">
           <ThemeSwitcher value={theme} onChange={onThemeChange} />
-          <span className="text-[11px] font-semibold text-muted">
-            {windowState.isFullScreen ? "全屏" : "窗口"}
-          </span>
+          <span className="text-[11px] font-semibold text-muted">{windowState.isFullScreen ? "全屏" : "窗口"}</span>
         </div>
       ) : (
         <div className="window-no-drag flex items-center gap-3">
           <ThemeSwitcher value={theme} onChange={onThemeChange} />
-          <div className="rounded-full border border-border bg-surface/60 px-3 py-1 text-[11px] font-semibold text-muted">
-            浏览器模式
-          </div>
         </div>
       )}
     </header>

@@ -39,43 +39,44 @@ type ThemeSwitcherProps = {
 };
 
 export function ThemeSwitcher({ value, onChange }: ThemeSwitcherProps): JSX.Element {
+  const selectedIndex = themes.findIndex((theme) => theme.id === value);
+  const selectedTheme = themes[selectedIndex] ?? themes[0];
+  const Icon = selectedTheme.icon;
+
+  const handleCycleTheme = (): void => {
+    const nextTheme = themes[(selectedIndex + 1) % themes.length] ?? themes[0];
+    onChange(nextTheme.id);
+  };
+
   return (
     <Tooltip.Provider delayDuration={120}>
-      <div className="flex items-center gap-2 rounded-control border border-border bg-surface/54 p-1 shadow-panel">
-        {themes.map((theme) => {
-          const Icon = theme.icon;
-          const selected = value === theme.id;
-
-          return (
-            <Tooltip.Root key={theme.id}>
-              <Tooltip.Trigger asChild>
-                <Button
-                  aria-label={`切换到${theme.label}`}
-                  className={cn(
-                    "h-9 w-9 rounded-control",
-                    selected && "bg-accent text-accent-foreground hover:brightness-100"
-                  )}
-                  size="icon"
-                  type="button"
-                  variant={selected ? "primary" : "ghost"}
-                  onClick={() => onChange(theme.id)}
-                >
-                  <Icon aria-hidden="true" className="h-4 w-4" />
-                </Button>
-              </Tooltip.Trigger>
-              <Tooltip.Portal>
-                <Tooltip.Content
-                  className="z-50 rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground shadow-lift"
-                  sideOffset={8}
-                >
-                  {theme.name} · {theme.label}
-                  <Tooltip.Arrow className="fill-surface" />
-                </Tooltip.Content>
-              </Tooltip.Portal>
-            </Tooltip.Root>
-          );
-        })}
-      </div>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <Button
+            aria-label={`切换主题，当前为 ${selectedTheme.label}`}
+            className={cn(
+              "h-9 rounded-control border border-border bg-surface/54 px-3 text-foreground shadow-panel hover:bg-surface",
+              "gap-2 font-medium"
+            )}
+            size="sm"
+            type="button"
+            variant="ghost"
+            onClick={handleCycleTheme}
+          >
+            <Icon aria-hidden="true" className="h-4 w-4 shrink-0 text-accent" />
+            <span className="truncate text-[12px]">{selectedTheme.label}</span>
+          </Button>
+        </Tooltip.Trigger>
+        <Tooltip.Portal>
+          <Tooltip.Content
+            className="z-50 rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground shadow-lift"
+            sideOffset={8}
+          >
+            点击切换主题
+            <Tooltip.Arrow className="fill-surface" />
+          </Tooltip.Content>
+        </Tooltip.Portal>
+      </Tooltip.Root>
     </Tooltip.Provider>
   );
 }
