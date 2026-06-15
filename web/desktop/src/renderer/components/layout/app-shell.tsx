@@ -1,8 +1,9 @@
-import { Home } from "lucide-react";
-import type { ReactNode } from "react";
+import { Home, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
-import { Surface } from "@renderer/components/primitives/surface";
-import { ThemeSwitcher, type ThemeId } from "@renderer/components/primitives/theme-switcher";
+import type { ThemeId } from "@renderer/components/primitives/theme-switcher";
+import { WindowTitleBar } from "@renderer/components/layout/window-title-bar";
+import { cn } from "@renderer/lib/utils";
 
 type AppShellProps = {
   children: ReactNode;
@@ -10,48 +11,126 @@ type AppShellProps = {
   onThemeChange: (theme: ThemeId) => void;
 };
 
-export function AppShell({
-  children,
-  onThemeChange,
-  theme
-}: AppShellProps): JSX.Element {
-  return (
-    <main className="min-h-screen w-full max-w-full overflow-x-hidden p-4 text-foreground md:p-6">
-      <div className="mx-auto grid min-h-[calc(100vh-3rem)] w-full max-w-[1760px] grid-cols-1 gap-4 lg:grid-cols-[260px_minmax(0,1fr)]">
-        <Surface className="flex flex-col justify-between gap-10 p-4" tone="transparent">
-          <div>
-            <div className="mb-8 flex items-center gap-3 px-2 pt-2">
-              <div className="grid h-11 w-11 place-items-center rounded-2xl bg-accent font-display text-sm font-black text-accent-foreground shadow-lift">
-                OSF
-              </div>
-              <div>
-                <div className="font-display text-base font-black">OpenStoryForge</div>
-                <div className="text-xs text-muted">视觉小说创作底座</div>
-              </div>
-            </div>
+const scrollbarHideDelay = 800;
 
-            <nav aria-label="主导航" className="space-y-2">
+export function AppShell({ children, onThemeChange, theme }: AppShellProps): JSX.Element {
+  const scrollHideTimerRef = useRef<number | undefined>(undefined);
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
+  const [isScrolling, setIsScrolling] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      if (scrollHideTimerRef.current !== undefined) {
+        window.clearTimeout(scrollHideTimerRef.current);
+      }
+    };
+  }, []);
+
+  const handleWorkspaceScroll = (): void => {
+    setIsScrolling(true);
+
+    if (scrollHideTimerRef.current !== undefined) {
+      window.clearTimeout(scrollHideTimerRef.current);
+    }
+
+    scrollHideTimerRef.current = window.setTimeout(() => {
+      setIsScrolling(false);
+    }, scrollbarHideDelay);
+  };
+
+  return (
+    <div className="flex h-screen overflow-hidden bg-background text-foreground">
+      <div className="pointer-events-none fixed inset-0 opacity-95">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_0%,hsl(var(--accent)/0.22),transparent_34rem),radial-gradient(circle_at_88%_18%,hsl(var(--signal)/0.16),transparent_36rem),linear-gradient(135deg,hsl(var(--background)),hsl(var(--surface-strong)))]" />
+        <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(90deg,hsl(var(--foreground))_1px,transparent_1px),linear-gradient(hsl(var(--foreground))_1px,transparent_1px)] [background-size:48px_48px]" />
+      </div>
+
+      <div className="relative z-10 flex min-h-0 w-full flex-col">
+        <WindowTitleBar theme={theme} onThemeChange={onThemeChange} />
+
+        <div className="flex min-h-0 flex-1 overflow-hidden">
+          <aside
+            className={cn(
+              "hidden shrink-0 border-r border-border/70 bg-surface/38 backdrop-blur-2xl transition-[width] duration-300 ease-out lg:flex lg:flex-col",
+              isSidebarExpanded ? "w-[280px]" : "w-[76px]"
+            )}
+          >
+            <div
+              className={cn(
+                "flex h-12 shrink-0 items-center border-b border-border/35 px-3",
+                isSidebarExpanded ? "justify-end" : "justify-center"
+              )}
+            >
               <button
-                className="flex w-full items-center gap-3 rounded-2xl bg-accent px-4 py-3 text-left text-sm font-bold text-accent-foreground shadow-lift"
+                aria-label={isSidebarExpanded ? "收起导航栏" : "展开导航栏"}
+                className="grid h-9 w-9 place-items-center rounded-xl border border-border/70 bg-background/26 text-muted transition hover:bg-surface/58 hover:text-foreground"
+                onClick={() => setIsSidebarExpanded((current) => !current)}
+                title={isSidebarExpanded ? "收起导航栏" : "展开导航栏"}
                 type="button"
               >
-                <Home aria-hidden="true" className="h-4 w-4" />
-                主页
+                {isSidebarExpanded ? (
+                  <PanelLeftClose aria-hidden="true" className="h-4 w-4" />
+                ) : (
+                  <PanelLeftOpen aria-hidden="true" className="h-4 w-4" />
+                )}
+              </button>
+            </div>
+
+            <nav
+              aria-label="主导航"
+              className={cn("flex-1 py-4", isSidebarExpanded ? "px-4" : "px-2")}
+            >
+              <button
+                className={cn(
+                  "group flex w-full items-center rounded-2xl bg-foreground text-left text-sm font-bold text-background shadow-lift transition hover:translate-x-1",
+                  isSidebarExpanded ? "justify-between px-4 py-3" : "justify-center px-0 py-3"
+                )}
+                type="button"
+              >
+                <span className={cn("flex items-center", isSidebarExpanded ? "gap-3" : "gap-0")}>
+                  <Home aria-hidden="true" className="h-4 w-4" />
+                  <span className={cn(isSidebarExpanded ? "inline" : "sr-only")}>主页</span>
+                </span>
+                {isSidebarExpanded ? (
+                  <PanelLeftClose aria-hidden="true" className="h-4 w-4 opacity-50 transition group-hover:opacity-90" />
+                ) : null}
               </button>
             </nav>
-          </div>
 
-          <div className="space-y-4 px-2 pb-2">
-            <ThemeSwitcher value={theme} onChange={onThemeChange} />
-            <div className="h-px bg-border" />
-            <div className="text-xs leading-6 text-muted">
-              菜单保持克制。后续新增作品、角色、Agent 或设置入口时，会从这里扩展。
+            {isSidebarExpanded ? (
+              <div className="border-t border-border/60 px-4 py-5">
+                <p className="text-xs leading-6 text-muted">
+                  当前只保留主页。后续新增模块时，从同一导航轨道扩展，不预先制造空菜单。
+                </p>
+              </div>
+            ) : null}
+          </aside>
+
+          <section className="flex min-w-0 flex-1 flex-col overflow-hidden bg-background/18">
+            <div className="flex h-16 shrink-0 items-center justify-between border-b border-border/60 bg-surface/26 px-4 backdrop-blur-2xl lg:hidden">
+              <div className="flex items-center gap-3">
+                <div className="grid h-9 w-9 place-items-center rounded-xl bg-accent font-display text-xs font-black text-accent-foreground">
+                  OSF
+                </div>
+                <div>
+                  <div className="font-display text-sm font-black">OpenStoryForge</div>
+                  <div className="text-[11px] text-muted">主页</div>
+                </div>
+              </div>
             </div>
-          </div>
-        </Surface>
 
-        <section className="min-w-0">{children}</section>
+            <main
+              className={cn(
+                "app-scrollbar min-h-0 flex-1 overflow-y-auto overflow-x-hidden",
+                isScrolling && "app-scrollbar-active"
+              )}
+              onScroll={handleWorkspaceScroll}
+            >
+              {children}
+            </main>
+          </section>
+        </div>
       </div>
-    </main>
+    </div>
   );
 }

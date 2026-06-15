@@ -1,38 +1,86 @@
 import { useGSAP } from "@gsap/react";
-import { ArrowRight, Layers3, Palette, Type } from "lucide-react";
-import { useRef } from "react";
+import {
+  BookOpenText,
+  Bot,
+  ChevronRight,
+  Circle,
+  FileText,
+  Folder,
+  FolderTree,
+  ListTree,
+  MessageSquarePlus,
+  Network,
+  PanelRightClose,
+  PanelRightOpen,
+  SendHorizontal,
+  Settings2,
+  UserRound
+} from "lucide-react";
+import type { ReactNode } from "react";
+import { useRef, useState } from "react";
 
 import { Button } from "@renderer/components/primitives/button";
-import { Surface } from "@renderer/components/primitives/surface";
 import { animateHome } from "@renderer/features/home/home-motion";
+import { cn } from "@renderer/lib/utils";
 
-const words = "把创作现场、模型能力、运行反馈和中文写作节奏放进同一个可扩展的桌面底座。".split("");
+type ProjectTabId = "directory" | "outline" | "chapters" | "nodes";
 
-const themeCards = [
+const projectTabs = [
+  { id: "directory", label: "目录", icon: FolderTree },
+  { id: "outline", label: "大纲", icon: ListTree },
+  { id: "chapters", label: "章节", icon: BookOpenText },
+  { id: "nodes", label: "节点", icon: Network }
+] as const;
+
+const messages = [
   {
-    title: "四套主题先行",
-    body: "明亮与暗黑各两套，全部由 CSS 变量驱动，Tailwind 与 Radix 共享同一套 token。",
-    image: "https://picsum.photos/seed/openstoryforge-theme/1200/800"
+    id: "agent-1",
+    role: "agent",
+    title: "OpenStoryForge Agent",
+    body: "选择项目文件夹后，我会读取目录结构，并把大纲、章节和节点同步到右侧页面栏。"
   },
   {
-    title: "字体按系统收束",
-    body: "中文正文、展示标题、代码数值各自有明确字体栈，组件不能散写字体。",
-    image: "https://picsum.photos/seed/openstoryforge-type/1200/800"
+    id: "user-1",
+    role: "user",
+    title: "创作者",
+    body: "我想搭建一个偏悬疑的视觉小说项目，先整理世界观、章节结构和关键节点。"
   },
   {
-    title: "组件分层管理",
-    body: "primitives、layout、features 分开演进，后续加菜单时不会把主页写成杂糅文件。",
-    image: "https://picsum.photos/seed/openstoryforge-layer/1200/800"
+    id: "agent-2",
+    role: "agent",
+    title: "OpenStoryForge Agent",
+    body: "收到。左侧保持连续对话，右侧作为可收放的项目页面栏。"
   }
+];
+
+const directoryItems = [
+  { depth: 0, name: "未选择项目文件夹", type: "folder" },
+  { depth: 1, name: "选择文件夹后读取目录", type: "file" },
+  { depth: 1, name: "assets / scripts / chapters", type: "file" }
+];
+
+const outlineItems = ["世界观设定", "主角动机", "冲突推进", "结局分支"];
+
+const chapterItems = [
+  { title: "序章", meta: "建立悬疑引子" },
+  { title: "第一章", meta: "角色进入异常现场" },
+  { title: "第二章", meta: "关键证词出现矛盾" }
+];
+
+const nodeItems = [
+  { title: "开始节点", children: ["开场对白", "环境镜头"] },
+  { title: "调查节点", children: ["线索 A", "线索 B", "分歧选择"] }
 ];
 
 export function HomePage(): JSX.Element {
   const rootRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState<ProjectTabId>("directory");
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useGSAP(
     () => {
       if (!rootRef.current) {
-        return;
+        return undefined;
       }
 
       return animateHome(rootRef.current);
@@ -41,149 +89,271 @@ export function HomePage(): JSX.Element {
   );
 
   return (
-    <div ref={rootRef} className="relative min-h-full overflow-hidden rounded-shell border border-border bg-background/58 shadow-panel">
-      <div className="pointer-events-none absolute inset-0 opacity-70 [background-image:linear-gradient(90deg,hsl(var(--foreground)/0.05)_1px,transparent_1px),linear-gradient(hsl(var(--foreground)/0.04)_1px,transparent_1px)] [background-size:28px_28px]" />
-      <div className="pointer-events-none absolute -right-24 top-0 h-72 w-72 rounded-full bg-accent/20 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-12 left-1/3 h-80 w-80 rounded-full bg-signal/16 blur-3xl" />
+    <div ref={rootRef} className="relative h-full min-h-[640px] overflow-hidden">
+      <div className="flex h-full min-h-0 min-w-0 overflow-hidden">
+        <AgentWorkspace />
+        <ProjectDrawer
+          activeTab={activeTab}
+          isOpen={isDrawerOpen}
+          onTabChange={setActiveTab}
+          onToggle={() => setIsDrawerOpen((current) => !current)}
+        />
+      </div>
+    </div>
+  );
+}
 
-      <div className="relative px-6 py-8 md:px-10 lg:px-14">
-        <nav className="mb-10 flex items-center justify-between gap-6 rounded-control border border-border bg-surface/56 px-5 py-3 shadow-panel backdrop-blur-2xl md:mb-16" data-reveal>
-          <div className="font-display text-sm font-black tracking-normal">OpenStoryForge · 主页</div>
-          <div className="hidden items-center gap-6 text-sm font-semibold text-muted md:flex">
-            <span>设计系统</span>
-            <span>主题</span>
-            <span>字体</span>
+function AgentWorkspace(): JSX.Element {
+  return (
+    <section className="flex min-h-0 min-w-0 flex-1 flex-col border-r border-border/70" data-reveal>
+      <div className="flex h-14 shrink-0 items-center justify-end gap-2 border-b border-border/50 px-4 md:px-6">
+        <IconButton label="新建对话">
+          <MessageSquarePlus aria-hidden="true" className="h-4 w-4" />
+        </IconButton>
+        <IconButton label="Agent 设置">
+          <Settings2 aria-hidden="true" className="h-4 w-4" />
+        </IconButton>
+      </div>
+
+      <div className="flex min-h-0 flex-1 flex-col bg-surface/24">
+        <div className="flex shrink-0 items-center gap-3 border-b border-border/50 px-5 py-4 md:px-6">
+          <div className="grid h-10 w-10 place-items-center rounded-2xl bg-accent text-accent-foreground shadow-lift">
+            <Bot aria-hidden="true" className="h-5 w-5" />
           </div>
-        </nav>
-
-        <section className="relative min-h-[660px] py-6 md:min-h-[720px] md:py-14">
-          <div className="relative z-10">
-            <h1 className="max-w-[1120px] text-wrap font-display text-[clamp(2.45rem,4vw,4rem)] font-black leading-[1.03] tracking-normal" data-reveal>
-              用克制但有锋芒的主页，定下 OpenStoryForge 的桌面气质。
-            </h1>
-            <p className="mt-7 max-w-3xl text-base leading-8 text-muted md:text-lg md:leading-9" data-reveal>
-              这里先搭底层框架，不提前创建业务菜单。主页只承担风格样板、主题验证和组件组织示范。
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3" data-reveal>
-              <Button>
-                查看框架结构
-                <ArrowRight aria-hidden="true" className="h-4 w-4" />
-              </Button>
-              <Button variant="secondary">只保留主页菜单</Button>
-            </div>
+          <div>
+            <div className="font-display text-base font-black">OpenStoryForge Agent</div>
+            <div className="text-xs text-muted">项目上下文暂未连接 · 等待选择文件夹</div>
           </div>
+        </div>
 
-          <Surface className="group mt-12 max-w-[560px] overflow-hidden p-3 md:ml-auto lg:absolute lg:bottom-0 lg:right-0 lg:mt-0 lg:w-[500px]" data-reveal>
-            <div
-              className="min-h-[360px] rounded-[24px] bg-cover bg-center p-5 contrast-125 transition-transform duration-700 ease-out group-hover:scale-[1.02] md:min-h-[430px]"
-              data-scale-media
-              style={{
-                backgroundImage:
-                  "linear-gradient(135deg, hsl(var(--background)/0.18), hsl(var(--foreground)/0.5)), url(https://picsum.photos/seed/openstoryforge-studio/1200/1200)"
-              }}
-            >
-              <div className="flex h-full flex-col justify-between">
-                <div className="max-w-xs rounded-2xl border border-white/18 bg-black/26 p-4 text-white backdrop-blur-xl">
-                  <div className="font-display text-2xl font-black">主页</div>
-                  <div className="mt-3 text-sm leading-6 text-white/76">
-                    视觉方向、主题、字体、组件层次集中在这里验证。
+        <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-5 py-6 md:px-8">
+          {messages.map((message) => {
+            const isUser = message.role === "user";
+
+            return (
+              <article className={cn("flex gap-3", isUser && "flex-row-reverse")} data-reveal key={message.id}>
+                <div
+                  className={cn(
+                    "grid h-9 w-9 shrink-0 place-items-center rounded-2xl border border-border",
+                    isUser ? "bg-foreground text-background" : "bg-accent text-accent-foreground"
+                  )}
+                >
+                  {isUser ? (
+                    <UserRound aria-hidden="true" className="h-4 w-4" />
+                  ) : (
+                    <Bot aria-hidden="true" className="h-4 w-4" />
+                  )}
+                </div>
+                <div
+                  className={cn(
+                    "max-w-[76%] rounded-[1.35rem] border border-border/70 px-4 py-3 shadow-panel",
+                    isUser ? "bg-foreground text-background" : "bg-surface/62"
+                  )}
+                >
+                  <div className={cn("text-xs font-bold", isUser ? "text-background/70" : "text-muted")}>
+                    {message.title}
                   </div>
+                  <p className="mt-2 text-sm leading-7">{message.body}</p>
                 </div>
-                <div className="grid grid-cols-3 gap-2 text-xs font-semibold text-white">
-                  <span className="rounded-full bg-white/16 px-3 py-2 backdrop-blur-xl">Tailwind</span>
-                  <span className="rounded-full bg-white/16 px-3 py-2 backdrop-blur-xl">Radix</span>
-                  <span className="rounded-full bg-white/16 px-3 py-2 backdrop-blur-xl">GSAP</span>
-                </div>
-              </div>
-            </div>
-          </Surface>
-        </section>
+              </article>
+            );
+          })}
+        </div>
 
-        <section className="py-28 md:py-40">
-          <div className="max-w-6xl font-display text-[clamp(2.2rem,4.4vw,4.8rem)] font-black leading-tight tracking-normal" data-word-line>
-            {words.map((word, index) => (
-              <span data-word key={`${word}-${index}`}>
-                {word}
-              </span>
+        <div className="shrink-0 border-t border-border/50 p-4 md:px-6">
+          <div className="flex items-end gap-3 rounded-[1.35rem] border border-border bg-background/46 p-3 shadow-panel">
+            <textarea
+              className="min-h-12 flex-1 resize-none bg-transparent px-2 py-2 text-sm leading-6 outline-none placeholder:text-muted"
+              placeholder="输入创作目标、剧情设定或让 Agent 分析当前项目..."
+              rows={2}
+            />
+            <Button size="icon" type="button">
+              <SendHorizontal aria-hidden="true" className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+type IconButtonProps = {
+  children: ReactNode;
+  label: string;
+};
+
+function IconButton({ children, label }: IconButtonProps): JSX.Element {
+  return (
+    <button
+      aria-label={label}
+      className="grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface/42 text-muted transition hover:bg-surface/72 hover:text-foreground"
+      title={label}
+      type="button"
+    >
+      {children}
+    </button>
+  );
+}
+
+type ProjectDrawerProps = {
+  activeTab: ProjectTabId;
+  isOpen: boolean;
+  onTabChange: (tab: ProjectTabId) => void;
+  onToggle: () => void;
+};
+
+function ProjectDrawer({ activeTab, isOpen, onTabChange, onToggle }: ProjectDrawerProps): JSX.Element {
+  return (
+    <aside
+      className={cn(
+        "relative z-20 flex min-h-0 shrink-0 overflow-hidden bg-surface/22 backdrop-blur-2xl transition-[width] duration-300 ease-out",
+        isOpen ? "w-[410px]" : "w-[72px]"
+      )}
+      data-reveal
+    >
+      <div className="flex h-full w-[72px] shrink-0 flex-col items-center border-l border-border/70 py-2">
+        <div className="flex h-12 shrink-0 items-center justify-center">
+          <button
+            aria-label={isOpen ? "收起页面栏" : "展开页面栏"}
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-border bg-background/42 text-muted transition hover:text-foreground"
+            onClick={onToggle}
+            type="button"
+          >
+            {isOpen ? (
+              <PanelRightClose aria-hidden="true" className="h-4 w-4" />
+            ) : (
+              <PanelRightOpen aria-hidden="true" className="h-4 w-4" />
+            )}
+          </button>
+        </div>
+
+        <div className="flex flex-1 flex-col items-center gap-2 py-3">
+          {projectTabs.map((tab) => {
+            const Icon = tab.icon;
+            const selected = activeTab === tab.id;
+
+            return (
+              <button
+                aria-label={tab.label}
+                aria-pressed={selected}
+                className={cn(
+                  "grid h-10 w-10 place-items-center rounded-xl text-muted transition hover:bg-surface/60 hover:text-foreground",
+                  selected && "bg-foreground text-background"
+                )}
+                key={tab.id}
+                onClick={() => {
+                  onTabChange(tab.id);
+
+                  if (!isOpen) {
+                    onToggle();
+                  }
+                }}
+                title={tab.label}
+                type="button"
+              >
+                <Icon aria-hidden="true" className="h-4 w-4" />
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div
+        aria-hidden={!isOpen}
+        className={cn(
+          "min-h-0 w-[338px] shrink-0 overflow-y-auto border-l border-border/70 bg-surface/42 p-4 transition duration-300 ease-out app-scrollbar",
+          isOpen ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0 pointer-events-none"
+        )}
+      >
+        {activeTab === "directory" ? <DirectoryView /> : null}
+        {activeTab === "outline" ? <OutlineView /> : null}
+        {activeTab === "chapters" ? <ChaptersView /> : null}
+        {activeTab === "nodes" ? <NodesView /> : null}
+      </div>
+    </aside>
+  );
+}
+
+function DirectoryView(): JSX.Element {
+  return (
+    <div className="space-y-4">
+      <Button className="w-full" variant="secondary">
+        <Folder aria-hidden="true" className="h-4 w-4" />
+        选择项目文件夹
+      </Button>
+      <div className="rounded-[1.25rem] border border-border/70 bg-background/36 p-3">
+        {directoryItems.map((item) => {
+          const Icon = item.type === "folder" ? Folder : FileText;
+
+          return (
+            <div
+              className="flex items-center gap-2 rounded-xl px-2 py-2 text-sm text-muted"
+              key={`${item.depth}-${item.name}`}
+              style={{ paddingLeft: `${item.depth * 18 + 8}px` }}
+            >
+              <Icon aria-hidden="true" className="h-4 w-4" />
+              {item.name}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function OutlineView(): JSX.Element {
+  return (
+    <div className="space-y-3">
+      {outlineItems.map((item, index) => (
+        <article className="rounded-[1.25rem] border border-border/70 bg-background/36 p-4" key={item}>
+          <div className="text-xs font-bold text-muted">大纲 {index + 1}</div>
+          <div className="mt-2 font-display text-lg font-black">{item}</div>
+          <div className="mt-3 h-1.5 rounded-full bg-border">
+            <div className="h-full rounded-full bg-accent" style={{ width: `${32 + index * 14}%` }} />
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function ChaptersView(): JSX.Element {
+  return (
+    <div className="space-y-3">
+      {chapterItems.map((chapter) => (
+        <article className="flex gap-3 rounded-[1.25rem] border border-border/70 bg-background/36 p-4" key={chapter.title}>
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-accent/16 text-accent">
+            <BookOpenText aria-hidden="true" className="h-5 w-5" />
+          </div>
+          <div>
+            <div className="font-display text-lg font-black">{chapter.title}</div>
+            <div className="mt-1 text-sm leading-6 text-muted">{chapter.meta}</div>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function NodesView(): JSX.Element {
+  return (
+    <div className="space-y-3">
+      {nodeItems.map((node) => (
+        <article className="rounded-[1.25rem] border border-border/70 bg-background/36 p-4" key={node.title}>
+          <div className="flex items-center gap-2 font-display text-lg font-black">
+            <ChevronRight aria-hidden="true" className="h-4 w-4 text-accent" />
+            {node.title}
+          </div>
+          <div className="mt-3 space-y-2 border-l border-border/80 pl-4">
+            {node.children.map((child) => (
+              <div className="flex items-center gap-2 text-sm text-muted" key={child}>
+                <Circle aria-hidden="true" className="h-2.5 w-2.5 fill-current" />
+                {child}
+              </div>
             ))}
           </div>
-        </section>
-
-        <section className="grid auto-rows-[minmax(210px,auto)] grid-cols-1 gap-4 [grid-auto-flow:dense] md:grid-cols-4">
-          <Surface className="md:col-span-2 md:row-span-2 group overflow-hidden p-0" data-reveal>
-            <div
-              className="h-full min-h-[430px] bg-cover bg-center p-7 transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-              style={{
-                backgroundImage:
-                  "linear-gradient(135deg, hsl(var(--foreground)/0.68), hsl(var(--accent)/0.24)), url(https://picsum.photos/seed/openstoryforge-bento/1400/1000)"
-              }}
-            >
-              <div className="max-w-md text-white">
-                <Palette className="mb-6 h-7 w-7" />
-                <h2 className="font-display text-4xl font-black leading-tight tracking-normal">设计系统先于业务扩展</h2>
-                <p className="mt-5 text-base leading-8 text-white/78">
-                  主题、字体、按钮、面板、导航与动效先稳定下来，后续加功能时只扩展结构。
-                </p>
-              </div>
-            </div>
-          </Surface>
-
-          {themeCards.map((card) => (
-            <Surface className="group overflow-hidden p-0" data-reveal key={card.title}>
-              <div className="h-28 overflow-hidden">
-                <img
-                  alt=""
-                  className="h-full w-full object-cover opacity-90 mix-blend-luminosity contrast-125 transition-transform duration-700 ease-out group-hover:scale-110"
-                  src={card.image}
-                />
-              </div>
-              <div className="p-5">
-                <h3 className="font-display text-xl font-black tracking-normal">{card.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-muted">{card.body}</p>
-              </div>
-            </Surface>
-          ))}
-
-          <Surface className="md:col-span-2 p-7" data-reveal>
-            <div className="flex h-full flex-col justify-between gap-8 md:flex-row md:items-end">
-              <div>
-                <Layers3 className="mb-5 h-7 w-7 text-accent" />
-                <h3 className="font-display text-3xl font-black tracking-normal">组件边界清晰</h3>
-                <p className="mt-4 max-w-xl text-sm leading-7 text-muted">
-                  `primitives` 承载可复用 UI，`layout` 承载桌面壳，`features/home` 承载主页。后续页面可以独立添加。
-                </p>
-              </div>
-              <div className="font-mono text-xs leading-6 text-muted">
-                components/primitives
-                <br />
-                components/layout
-                <br />
-                features/home
-              </div>
-            </div>
-          </Surface>
-
-          <Surface className="md:col-span-2 p-7" data-reveal>
-            <Type className="mb-5 h-7 w-7 text-signal" />
-            <h3 className="font-display text-3xl font-black tracking-normal">字体有平台策略</h3>
-            <p className="mt-4 text-sm leading-7 text-muted">
-              中文正文优先系统中文字体；标题用 display 变量控制气质；代码与数值使用 mono 变量。组件不随意写散乱字体。
-            </p>
-          </Surface>
-        </section>
-
-        <footer className="flex flex-col justify-between gap-6 py-24 md:flex-row md:items-end">
-          <div>
-            <h2 className="font-display text-[clamp(2.4rem,4vw,4.8rem)] font-black leading-none tracking-normal">
-              下一步只等你指定功能。
-            </h2>
-            <p className="mt-6 max-w-2xl text-base leading-8 text-muted">
-              框架会保持可扩展，但不会擅自添加作品、角色、Agent、模型或设置菜单。
-            </p>
-          </div>
-          <Button variant="secondary">主页框架已就绪</Button>
-        </footer>
-      </div>
+        </article>
+      ))}
     </div>
   );
 }
