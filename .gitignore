@@ -1,29 +1,73 @@
-### AL ###
-#Template for AL projects for Dynamics 365 Business Central
-#launch.json folder
-.vscode/
-#Cache folder
-.alcache/
-#Symbols folder
-.alpackages/
-#Snapshots folder
-.snapshots/
-#Testing Output folder
-.output/
-#Extension App-file
-*.app
-#Rapid Application Development File
-rad.json
-#Translation Base-file
-*.g.xlf
-#License-files
-*.bclicense
-*.flf
-#Test results file
-TestResults.xml
+###############################################################################
+# OS files
+###############################################################################
 
-# Visual Studio files
-/.vs
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+
+###############################################################################
+# Environment / secrets / local config
+###############################################################################
+
+.env
+.env.*
+!.env.example
+!.env.template
+
+*.local
+*.secret
+*.secrets
+*.key
+*.pem
+*.pfx
+*.p12
+*.cer
+*.crt
+
+appsettings.Local.json
+appsettings.local.json
+appsettings.Development.local.json
+appsettings.*.local.json
+
+secrets.json
+
+
+###############################################################################
+# Visual Studio / .NET / C#
+###############################################################################
+
+# Visual Studio workspace
+.vs/
+.vsconfig.user
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
 
 # Build results
 [Dd]ebug/
@@ -40,34 +84,252 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+artifacts/
 
-# MSTest test Results
+# Rider / ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Visual Studio cache / generated
+*.VC.db
+*.VC.VC.opendb
+*.opendb
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+*.cachefile
+*.dbmdl
+*.jfm
+
+# Publish / package output
+[Pp]ublish/
+*.nupkg
+*.snupkg
+*.vsix
+*.symbols.nupkg
+
+# NuGet old project lock files
+project.lock.json
+project.fragment.lock.json
+
+# Do NOT ignore packages.lock.json if you use NuGet locked restore.
+# packages.lock.json
+
+# NuGet local package folders
+packages/
+!packages/build/
+.nuget/packages/
+
+
+###############################################################################
+# Test results / coverage / reports
+###############################################################################
+
+# MSTest
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
-# NUnit
+# NUnit / xUnit / general
 *.VisualState.xml
 TestResult.xml
+TestResults.xml
 nunit-*.xml
+xunit-results.xml
 
-# .NET
-project.lock.json
-project.fragment.lock.json
-artifacts/
+# Coverage
+coverage/
+coverage*/
+TestResults/
+*.coverage
+*.coveragexml
+coverage.cobertura.xml
+coverage.opencover.xml
+lcov.info
+*.trx
 
-# Node / frontend
+# BenchmarkDotNet
+BenchmarkDotNet.Artifacts/
+
+
+###############################################################################
+# Node / frontend / Electron
+###############################################################################
+
 node_modules/
+bower_components/
+
+# Build output
 dist/
+dist-ssr/
 dist-electron/
+build/
 out/
+.next/
+.nuxt/
+.svelte-kit/
 .vite/
+.turbo/
+.cache/
+.parcel-cache/
+
+# TypeScript
 *.tsbuildinfo
+
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
 
-# Superpowers visual companion
+# Package managers
+.pnpm-store/
+.yarn/*
+!.yarn/releases/
+!.yarn/plugins/
+!.yarn/sdks/
+!.yarn/versions/
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Electron Builder / Forge
+release/
+releases/
+electron-builder.env
+
+
+###############################################################################
+# Tauri / Rust
+###############################################################################
+
+target/
+Cargo.lock
+
+# If this repository contains a Rust application, consider tracking Cargo.lock.
+# If it is a Rust library template, ignoring Cargo.lock is acceptable.
+
+
+###############################################################################
+# Python
+###############################################################################
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+.venv/
+venv/
+env/
+ENV/
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+dist/
+build/
+*.egg-info/
+
+
+###############################################################################
+# Java / Gradle / Maven
+###############################################################################
+
+.gradle/
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Keep Gradle wrapper jar if you use Gradle wrapper.
+!gradle/wrapper/gradle-wrapper.jar
+
+
+###############################################################################
+# Databases / local data
+###############################################################################
+
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.mdb
+*.bak
+
+
+###############################################################################
+# Logs / temp / cache
+###############################################################################
+
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*.pid
+*.seed
+*.pid.lock
+
+tmp/
+temp/
+.cache/
+
+
+###############################################################################
+# IDEs / editors
+###############################################################################
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/*.code-snippets
+
+# JetBrains IDEs
+.idea/
+*.iml
+
+# Fleet
+.fleet/
+
+# Vim / Emacs
+*.swp
+*.swo
+*~
+.#*
+\#*#
+
+
+###############################################################################
+# AL / Dynamics 365 Business Central
+###############################################################################
+
+.alcache/
+.alpackages/
+.snapshots/
+.output/
+*.app
+rad.json
+*.g.xlf
+*.bclicense
+*.flf
+
+
+###############################################################################
+# Project-specific odd files
+###############################################################################
+
 .superpowers/
 superpowers/
 /templates - 快捷方式.lnk
