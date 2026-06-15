@@ -66,8 +66,8 @@ function AgentWorkspace({ conversation }: { conversation: ConversationRecord }):
         </div>
 
         <div className="shrink-0 border-t border-border/45 bg-surface/28 px-4 py-4 md:px-6">
-          <div className={conversationRailClass} data-conversation-composer>
-            <InputComposerContainer>
+          <div className={conversationRailClass}>
+            <InputComposerContainer data-conversation-composer>
               <textarea
                 className="min-h-[96px] w-full resize-none bg-transparent px-1 py-2 text-sm leading-6 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 placeholder:text-muted"
                 onChange={(event) => setDraft(event.target.value)}
@@ -135,4 +135,3 @@ function ConversationMessageBlock({ message }: { message: ConversationMessage })
     </article>
   );
 }
-
