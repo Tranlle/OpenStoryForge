@@ -191,12 +191,50 @@ export function QuickPromptTags({
         >
           <span className="truncate">
             <span className="font-semibold text-foreground/92">{prompt.title}</span>
-            <span className="mx-2 text-muted/50">·</span>
+            <span className="mx-2 text-muted/50">/</span>
             <span>{prompt.summary}</span>
           </span>
         </button>
       ))}
     </div>
+  );
+}
+
+export function ProjectNameInput({
+  helpText,
+  label,
+  listId,
+  onChange,
+  readOnly = false,
+  suggestions = [],
+  value
+}: {
+  helpText?: string;
+  label: string;
+  listId?: string;
+  onChange: (value: string) => void;
+  readOnly?: boolean;
+  suggestions?: string[];
+  value: string;
+}): JSX.Element {
+  return (
+    <Field>
+      <FieldLabel>{label}</FieldLabel>
+      <FieldInput
+        listId={readOnly ? undefined : listId}
+        onChange={(event) => onChange(event.target.value)}
+        readOnly={readOnly}
+        value={value}
+      />
+      {helpText ? <FieldHelp>{helpText}</FieldHelp> : null}
+      {listId ? (
+        <datalist id={listId}>
+          {suggestions.map((item) => (
+            <option key={item} value={item} />
+          ))}
+        </datalist>
+      ) : null}
+    </Field>
   );
 }
 
@@ -209,7 +247,11 @@ export function FolderDialog({
   onConfirm,
   onExistingFolderPathChange,
   onFolderBasePathChange,
-  onFolderNameChange
+  onFolderNameChange,
+  onProjectNameChange,
+  projectInputMode = "hidden",
+  projectName = "",
+  projectSuggestions = []
 }: {
   existingFolderPath: string;
   folderBasePath: string;
@@ -220,23 +262,28 @@ export function FolderDialog({
   onExistingFolderPathChange: (value: string) => void;
   onFolderBasePathChange: (value: string) => void;
   onFolderNameChange: (value: string) => void;
+  onProjectNameChange?: (value: string) => void;
+  projectInputMode?: "editable" | "hidden" | "readonly";
+  projectName?: string;
+  projectSuggestions?: string[];
 }): JSX.Element | null {
   if (!folderDialogMode) {
     return null;
   }
+
+  const showProjectField = projectInputMode !== "hidden";
+  const dialogTitle = folderDialogMode === "create" ? "指定新文件夹" : "指定已有文件夹";
+  const pathLabel = folderDialogMode === "create" ? "父级路径" : "文件夹路径";
+  const actionLabel = folderDialogMode === "create" ? "创建文件夹" : "选择文件夹";
 
   return (
     <DialogBackdrop onClose={onClose}>
       <div className="rounded-[1.6rem] bg-surface p-5 shadow-[0_12px_32px_hsl(var(--foreground)/0.028)]">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <div className="font-display text-xl font-black">
-              {folderDialogMode === "create" ? "新建项目任务文件夹" : "选定任务文件夹"}
-            </div>
+            <div className="font-display text-xl font-black">{dialogTitle}</div>
             <div className="mt-2 text-sm leading-6 text-muted">
-              {folderDialogMode === "create"
-                ? "这里先用前端示例占位，后续会改成调用后端接口创建任务目录。"
-                : "这里先用前端示例占位，后续会改成调用后端接口选择已有任务目录。"}
+              文件夹是任务上下文，不强制决定项目身份。欢迎页可新建或绑定项目，Home 页仅展示当前项目。
             </div>
           </div>
           <button
@@ -250,8 +297,20 @@ export function FolderDialog({
         </div>
 
         <div className="mt-5 space-y-4">
+          {showProjectField ? (
+            <ProjectNameInput
+              helpText={projectInputMode === "readonly" ? "当前项目只读显示。" : "可输入新项目名，或选择已有项目。"}
+              label="项目"
+              listId="folder-dialog-project-options"
+              onChange={(value) => onProjectNameChange?.(value)}
+              readOnly={projectInputMode === "readonly"}
+              suggestions={projectSuggestions}
+              value={projectName}
+            />
+          ) : null}
+
           <Field>
-            <FieldLabel>{folderDialogMode === "create" ? "父级路径" : "文件夹路径"}</FieldLabel>
+            <FieldLabel>{pathLabel}</FieldLabel>
             <FieldInput
               onChange={(event) =>
                 folderDialogMode === "create"
@@ -264,7 +323,7 @@ export function FolderDialog({
 
           {folderDialogMode === "create" ? (
             <Field>
-              <FieldLabel>文件夹名</FieldLabel>
+              <FieldLabel>文件夹名称</FieldLabel>
               <FieldInput onChange={(event) => onFolderNameChange(event.target.value)} value={folderName} />
             </Field>
           ) : null}
@@ -275,7 +334,7 @@ export function FolderDialog({
             取消
           </Button>
           <Button onClick={onConfirm} type="button">
-            {folderDialogMode === "create" ? "创建文件夹" : "选择文件夹"}
+            {actionLabel}
           </Button>
         </div>
       </div>
@@ -328,8 +387,8 @@ export function ComposerControlsRow({
       >
         {openMenu === "folder" ? (
           <OptionMenu>
-            <MenuAction label="新建项目任务文件夹" onClick={onFolderCreate} />
-            <MenuAction label="选定任务文件夹" onClick={onFolderSelect} />
+            <MenuAction label="创建并指定文件夹" onClick={onFolderCreate} />
+            <MenuAction label="选择已有文件夹" onClick={onFolderSelect} />
           </OptionMenu>
         ) : null}
       </SelectionButton>
@@ -407,21 +466,34 @@ function Field({ children }: { children: ReactNode }): JSX.Element {
   return <label className="block space-y-2">{children}</label>;
 }
 
+function FieldHelp({ children }: { children: ReactNode }): JSX.Element {
+  return <div className="text-xs leading-5 text-muted">{children}</div>;
+}
+
 function FieldLabel({ children }: { children: ReactNode }): JSX.Element {
   return <div className="text-sm font-medium text-foreground">{children}</div>;
 }
 
 function FieldInput({
+  listId,
   onChange,
+  readOnly = false,
   value
 }: {
+  listId?: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  readOnly?: boolean;
   value: string;
 }): JSX.Element {
   return (
     <input
-      className="h-12 w-full rounded-2xl bg-background/34 px-4 text-sm outline-none shadow-[inset_0_0_0_1px_hsl(var(--border)/0.2)] placeholder:text-muted"
+      className={cn(
+        "h-12 w-full rounded-2xl bg-background/34 px-4 text-sm outline-none shadow-[inset_0_0_0_1px_hsl(var(--border)/0.2)] placeholder:text-muted",
+        readOnly && "cursor-default text-muted"
+      )}
+      list={listId}
       onChange={onChange}
+      readOnly={readOnly}
       value={value}
     />
   );

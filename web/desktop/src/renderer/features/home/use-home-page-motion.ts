@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { useRef, useState } from "react";
 
 import { animateHome } from "@renderer/features/home/home-motion";
-import type { WorkspaceMode } from "@renderer/use-workspace-state";
+import type { WorkspaceMode } from "@renderer/state/workspace-state";
 
 export function useHomePageMotion({
   conversationId,

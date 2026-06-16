@@ -20,6 +20,6 @@ if not exist "node_modules" (
 echo Starting OpenStoryForge Electron frontend. Backend integration is disabled for now.
 set "OSF_BACKEND_DISABLED=1"
 set "VITE_OPENSTORYFORGE_BACKEND_DISABLED=true"
-call npm run dev:electron
+call npm run dev
 
 endlocal

@@ -1,9 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
 import { Maximize2, Minus, PanelTop, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ThemeSwitcher, type ThemeId } from "@renderer/components/primitives/theme-switcher";
 import { cn } from "@renderer/lib/utils";
-import type { OpenStoryForgeWindowState } from "@renderer/vite-env";
+import type { OpenStoryForgeWindowState } from "@shared/electron";
 
 type RuntimeInfo = ReturnType<NonNullable<Window["openStoryForge"]>["getAppInfo"]>;
 
@@ -30,10 +31,14 @@ type WindowTitleBarProps = {
 
 export function WindowTitleBar({ onThemeChange, theme }: WindowTitleBarProps): JSX.Element {
   const bridge = window.openStoryForge;
-  const appInfo = useMemo(() => bridge?.getAppInfo() ?? browserRuntime, [bridge]);
   const [windowState, setWindowState] = useState<OpenStoryForgeWindowState>({
     isFullScreen: false,
     isMaximized: false
+  });
+  const { data: appInfo = browserRuntime } = useQuery({
+    queryKey: ["desktop-app-info"],
+    queryFn: async () => bridge?.getAppInfo() ?? browserRuntime,
+    staleTime: Number.POSITIVE_INFINITY
   });
   const isMac = appInfo.platform === "darwin";
   const hasWindowControls = Boolean(bridge?.windowControls);
@@ -81,19 +86,19 @@ export function WindowTitleBar({ onThemeChange, theme }: WindowTitleBarProps): J
       {isMac && hasWindowControls ? (
         <div className="window-no-drag absolute left-3 top-0 flex h-12 items-center gap-2">
           <button
-            aria-label="关闭窗口"
+            aria-label="Close window"
             className="h-3.5 w-3.5 rounded-full border border-black/10 bg-[#ff5f57] shadow-inner transition hover:brightness-95"
             onClick={handleClose}
             type="button"
           />
           <button
-            aria-label="最小化窗口"
+            aria-label="Minimize window"
             className="h-3.5 w-3.5 rounded-full border border-black/10 bg-[#febc2e] shadow-inner transition hover:brightness-95"
             onClick={handleMinimize}
             type="button"
           />
           <button
-            aria-label={windowState.isMaximized ? "还原窗口" : "最大化窗口"}
+            aria-label={windowState.isMaximized ? "Restore window" : "Maximize window"}
             className="h-3.5 w-3.5 rounded-full border border-black/10 bg-[#28c840] shadow-inner transition hover:brightness-95"
             onClick={handleToggleMaximize}
             type="button"
@@ -108,7 +113,7 @@ export function WindowTitleBar({ onThemeChange, theme }: WindowTitleBarProps): J
         <div className="min-w-0">
           <div className="truncate font-display text-[13px] font-black leading-4 tracking-normal">OpenStoryForge</div>
           <div className="truncate text-[11px] font-medium leading-4 text-muted">
-            {platformLabel[appInfo.platform] ?? "浏览器"} 预览 · 后端暂未连接
+            {platformLabel[appInfo.platform] ?? "Browser"} Preview / Backend offline
           </div>
         </div>
       </div>
@@ -117,7 +122,7 @@ export function WindowTitleBar({ onThemeChange, theme }: WindowTitleBarProps): J
         <div className="window-no-drag flex h-12 items-center gap-2">
           <ThemeSwitcher value={theme} onChange={onThemeChange} />
           <button
-            aria-label="最小化窗口"
+            aria-label="Minimize window"
             className="grid h-9 w-11 place-items-center rounded-xl text-muted transition hover:bg-surface-strong/80 hover:text-foreground"
             onClick={handleMinimize}
             type="button"
@@ -125,7 +130,7 @@ export function WindowTitleBar({ onThemeChange, theme }: WindowTitleBarProps): J
             <Minus aria-hidden="true" className="h-4 w-4" />
           </button>
           <button
-            aria-label={windowState.isMaximized ? "还原窗口" : "最大化窗口"}
+            aria-label={windowState.isMaximized ? "Restore window" : "Maximize window"}
             className="grid h-9 w-11 place-items-center rounded-xl text-muted transition hover:bg-surface-strong/80 hover:text-foreground"
             onClick={handleToggleMaximize}
             type="button"
@@ -133,7 +138,7 @@ export function WindowTitleBar({ onThemeChange, theme }: WindowTitleBarProps): J
             <Maximize2 aria-hidden="true" className="h-3.5 w-3.5" />
           </button>
           <button
-            aria-label="关闭窗口"
+            aria-label="Close window"
             className="grid h-9 w-11 place-items-center rounded-xl text-muted transition hover:bg-red-500 hover:text-white"
             onClick={handleClose}
             type="button"
@@ -144,7 +149,7 @@ export function WindowTitleBar({ onThemeChange, theme }: WindowTitleBarProps): J
       ) : hasWindowControls ? (
         <div className="window-no-drag absolute right-4 flex items-center gap-3">
           <ThemeSwitcher value={theme} onChange={onThemeChange} />
-          <span className="text-[11px] font-semibold text-muted">{windowState.isFullScreen ? "全屏" : "窗口"}</span>
+          <span className="text-[11px] font-semibold text-muted">{windowState.isFullScreen ? "Full screen" : "Windowed"}</span>
         </div>
       ) : (
         <div className="window-no-drag flex items-center gap-3">

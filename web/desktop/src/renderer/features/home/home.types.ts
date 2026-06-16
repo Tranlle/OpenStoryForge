@@ -19,6 +19,7 @@ export type ConversationRecord = {
   id: string;
   messages: ConversationMessage[];
   modifiedAt: string;
+  projectName?: string;
   projectPath: string;
   status: ConversationStatus;
   title: string;

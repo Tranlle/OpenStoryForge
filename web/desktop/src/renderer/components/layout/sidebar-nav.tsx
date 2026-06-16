@@ -12,6 +12,7 @@ type SidebarNavProps = {
   isExpanded: boolean;
   onExpandChange: (expanded: boolean) => void;
   onNavigate: (item: AppNavItemId) => void;
+  onReturnHome: () => void;
   onSelectConversation: (conversationId: string) => void;
   projectTree: ProjectTreeData;
   selectedConversationId: string | null;
@@ -24,6 +25,7 @@ export function SidebarNav({
   isExpanded,
   onExpandChange,
   onNavigate,
+  onReturnHome,
   onSelectConversation,
   projectTree,
   selectedConversationId
@@ -80,12 +82,13 @@ export function SidebarNav({
         )}
       >
         <button
-          aria-label="返回欢迎页"
+          aria-label="Back to welcome"
           className={cn(
             "grid h-10 w-10 place-items-center rounded-xl bg-background/14 text-muted transition hover:bg-surface/46 hover:text-foreground",
             !isWidthExpanded && "hidden"
           )}
-          title="返回欢迎页"
+          onClick={onReturnHome}
+          title="Back to welcome"
           type="button"
         >
           <Home aria-hidden="true" className="h-4 w-4" />
@@ -93,20 +96,20 @@ export function SidebarNav({
 
         {isWidthExpanded ? (
           <button
-            aria-label="收起导航栏"
+            aria-label="Collapse sidebar"
             className="grid h-10 w-10 place-items-center rounded-xl bg-background/14 text-muted transition hover:bg-surface/46 hover:text-foreground"
             onClick={() => onExpandChange(false)}
-            title="收起导航栏"
+            title="Collapse sidebar"
             type="button"
           >
             <PanelLeftClose aria-hidden="true" className="h-4 w-4" />
           </button>
         ) : (
           <button
-            aria-label="展开导航栏"
+            aria-label="Expand sidebar"
             className="absolute right-3 top-2 hidden h-10 w-10 place-items-center rounded-xl bg-background/14 text-muted transition hover:bg-surface/46 hover:text-foreground lg:grid"
             onClick={() => onExpandChange(true)}
-            title="展开导航栏"
+            title="Expand sidebar"
             type="button"
           >
             <PanelLeftOpen aria-hidden="true" className="h-4 w-4" />
@@ -175,7 +178,7 @@ export function SidebarNav({
                         </>
                       ) : (
                         <>
-                          <span className={cn("flex-1 text-left", !isWidthExpanded && "hidden")}>更多</span>
+                          <span className={cn("flex-1 text-left", !isWidthExpanded && "hidden")}>More</span>
                           <ChevronDown aria-hidden="true" className="h-4 w-4" />
                         </>
                       )}
@@ -272,4 +275,3 @@ function SidebarPlaceholderButton({
     </div>
   );
 }
-

@@ -6,11 +6,12 @@ import { cn } from "@renderer/lib/utils";
 
 type HomePageProps = {
   conversation: ConversationRecord;
+  currentProjectName?: string;
   onCreateConversation: (input: CreateConversationInput) => void;
   workspaceMode: "conversation" | "new-conversation";
 };
 
-export function HomePage({ conversation, onCreateConversation, workspaceMode }: HomePageProps): JSX.Element {
+export function HomePage({ conversation, currentProjectName, onCreateConversation, workspaceMode }: HomePageProps): JSX.Element {
   const { conversationLayerRef, displayMode, isTransitioning, rootRef, welcomeLayerRef } = useHomePageMotion({
     conversationId: conversation.id,
     workspaceMode
@@ -26,7 +27,11 @@ export function HomePage({ conversation, onCreateConversation, workspaceMode }: 
         aria-hidden={!showWelcomeLayer}
         className={cn("absolute inset-0", showWelcomeLayer ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0")}
       >
-        <NewConversationWorkspace onCreateConversation={onCreateConversation} workspaceMode={workspaceMode} />
+        <NewConversationWorkspace
+          currentProjectName={currentProjectName}
+          onCreateConversation={onCreateConversation}
+          workspaceMode={workspaceMode}
+        />
       </div>
 
       <div
@@ -42,4 +47,3 @@ export function HomePage({ conversation, onCreateConversation, workspaceMode }: 
     </div>
   );
 }
-

@@ -14,8 +14,10 @@ import { useComposerControls } from "@renderer/features/home/use-composer-contro
 import { cn } from "@renderer/lib/utils";
 
 export function NewConversationWorkspace({
+  currentProjectName,
   onCreateConversation
 }: {
+  currentProjectName?: string;
   onCreateConversation: (input: CreateConversationInput) => void;
   workspaceMode: "conversation" | "new-conversation";
 }): JSX.Element {
@@ -108,8 +110,9 @@ export function NewConversationWorkspace({
         onExistingFolderPathChange={controls.setExistingFolderPath}
         onFolderBasePathChange={controls.setFolderBasePath}
         onFolderNameChange={controls.setFolderName}
+        projectInputMode="readonly"
+        projectName={currentProjectName ?? "Current project"}
       />
     </section>
   );
 }
-

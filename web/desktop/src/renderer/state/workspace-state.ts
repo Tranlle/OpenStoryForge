@@ -6,7 +6,10 @@ import type { ConversationRecord } from "@renderer/features/home/home.types";
 export type WorkspaceMode = "conversation" | "new-conversation";
 export type SidebarSelectionMode = "conversation" | "nav";
 
-export function useWorkspaceState(conversations: ConversationRecord[]): {
+export function useWorkspaceState(
+  conversations: ConversationRecord[],
+  externalSelectedConversationId?: string | null
+): {
   activeNav: AppNavItemId | null;
   handleNavigate: (item: AppNavItemId) => void;
   handleOpenConversation: (conversationId: string) => void;
@@ -17,7 +20,9 @@ export function useWorkspaceState(conversations: ConversationRecord[]): {
 } {
   const [activeNav, setActiveNav] = useState<AppNavItemId>("new-chat");
   const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>("new-conversation");
-  const [selectedConversationId, setSelectedConversationId] = useState(conversations[0]?.id ?? "");
+  const [selectedConversationId, setSelectedConversationId] = useState(
+    externalSelectedConversationId ?? conversations[0]?.id ?? ""
+  );
   const [sidebarSelectionMode, setSidebarSelectionMode] = useState<SidebarSelectionMode>("nav");
 
   useEffect(() => {
@@ -32,6 +37,16 @@ export function useWorkspaceState(conversations: ConversationRecord[]): {
     }
   }, [conversations, selectedConversationId]);
 
+  useEffect(() => {
+    if (!externalSelectedConversationId || externalSelectedConversationId === selectedConversationId) {
+      return;
+    }
+
+    setSelectedConversationId(externalSelectedConversationId);
+    setSidebarSelectionMode("conversation");
+    setWorkspaceMode("conversation");
+  }, [externalSelectedConversationId, selectedConversationId]);
+
   const selectedConversation = useMemo(
     () => conversations.find((conversation) => conversation.id === selectedConversationId) ?? conversations[0],
     [conversations, selectedConversationId]
@@ -43,11 +58,6 @@ export function useWorkspaceState(conversations: ConversationRecord[]): {
 
     if (item === "new-chat") {
       setWorkspaceMode("new-conversation");
-      return;
-    }
-
-    if (item !== "archive" && item !== "settings") {
-      setWorkspaceMode("conversation");
     }
   };
 

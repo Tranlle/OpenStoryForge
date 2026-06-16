@@ -1,8 +1,15 @@
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
 import type { ThemeId } from "@renderer/components/primitives/theme-switcher";
 
 const themeStorageKey = "openstoryforge.desktop.theme";
+
+type ThemeStateContextValue = {
+  setTheme: (theme: ThemeId) => void;
+  theme: ThemeId;
+};
+
+const ThemeStateContext = createContext<ThemeStateContextValue | null>(null);
 
 function readInitialTheme(): ThemeId {
   const stored = window.localStorage.getItem(themeStorageKey);
@@ -19,10 +26,7 @@ function readInitialTheme(): ThemeId {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "ink-theater" : "paper-atelier";
 }
 
-export function useThemeState(): {
-  setTheme: (theme: ThemeId) => void;
-  theme: ThemeId;
-} {
+export function ThemeStateProvider({ children }: { children: ReactNode }): JSX.Element {
   const [theme, setTheme] = useState<ThemeId>(readInitialTheme);
 
   useEffect(() => {
@@ -30,5 +34,15 @@ export function useThemeState(): {
     window.localStorage.setItem(themeStorageKey, theme);
   }, [theme]);
 
-  return { setTheme, theme };
+  return <ThemeStateContext.Provider value={{ setTheme, theme }}>{children}</ThemeStateContext.Provider>;
+}
+
+export function useThemeState(): ThemeStateContextValue {
+  const context = useContext(ThemeStateContext);
+
+  if (!context) {
+    throw new Error("useThemeState must be used within ThemeStateProvider");
+  }
+
+  return context;
 }

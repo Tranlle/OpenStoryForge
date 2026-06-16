@@ -19,4 +19,4 @@ fi
 echo "Starting OpenStoryForge Electron frontend. Backend integration is disabled for now."
 export OSF_BACKEND_DISABLED=1
 export VITE_OPENSTORYFORGE_BACKEND_DISABLED=true
-npm run dev:electron
+npm run dev

@@ -113,6 +113,8 @@ function AgentWorkspace({ conversation }: { conversation: ConversationRecord }):
         onExistingFolderPathChange={controls.setExistingFolderPath}
         onFolderBasePathChange={controls.setFolderBasePath}
         onFolderNameChange={controls.setFolderName}
+        projectInputMode="readonly"
+        projectName={conversation.projectName ?? "Current project"}
       />
     </section>
   );
