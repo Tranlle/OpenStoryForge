@@ -12,66 +12,66 @@ import type {
   QuickPrompt
 } from "@renderer/features/home/home.types";
 
-const defaultProjectPath = "D:/Stories/悬疑视觉小说";
+const defaultProjectPath = "D:/Stories/SuspenseVN";
 
 const defaultConversationConfig: ConversationConfig = {
-  folderLabel: "指定文件夹",
+  folderLabel: "Select folder",
   modelLabel: "deepseek-v4-flash",
-  presetLabel: "故事策划 Agent",
+  presetLabel: "Story Planner Agent",
   reasoningLevel: "None"
 };
 
-const markdownProbeMessage = `# 世界观上下文速览
+const markdownProbeMessage = `# Story workspace probe
 
-选择项目文件夹后，我会先读取目录结构，再把大纲、章节和节点整理到右侧抽屉中。
+After a project folder is selected, I will first read the directory structure and then organize the outline, chapters, and nodes into the drawer on the right.
 
-## 首轮动作
+## First-pass actions
 
-- 扫描项目目录与现有资源
-- 提取世界观、角色、章节的核心线索
-- 建立后续对话可复用的上下文骨架
+- Scan the project directory and any existing assets
+- Extract worldbuilding, characters, and chapter signals
+- Build reusable context for the next round of conversation
 
-> 当前这段内容用于测试 Markdown 渲染，包括层级标题、列表、引用、表格、任务项和代码块。
+> This message is intentionally rich so the Markdown renderer can be checked with headings, lists, quotes, tables, tasks, and code blocks.
 
-## 当前检查项
+## Current checks
 
-- [x] 标题层级
-- [x] 无序列表
-- [x] 引用块
-- [x] 表格
-- [ ] 代码块高亮样式
+- [x] Heading hierarchy
+- [x] Unordered lists
+- [x] Quote block
+- [x] Table layout
+- [ ] Code block highlighting
 
-## 信息摘要
+## Summary
 
-| 模块 | 状态 | 说明 |
+| Module | Status | Note |
 | --- | --- | --- |
-| 项目目录 | 已接入 | 等待真实后端返回目录结构 |
-| 章节大纲 | 占位中 | 后续替换为实际项目数据 |
-| 节点面板 | 可展开 | 用于承接结构化分析结果 |
+| Project directory | Connected | Waiting for a real backend directory response |
+| Chapter outline | Placeholder | Will be replaced with project data later |
+| Node panel | Expandable | Ready to host structured analysis output |
 
 \`\`\`ts
 const workspacePlan = {
-  folder: "悬疑视觉小说",
-  focus: ["世界观", "角色关系", "前三章结构"],
-  nextStep: "同步到右侧抽屉"
+  folder: "SuspenseVN",
+  focus: ["worldbuilding", "character dynamics", "chapter structure"],
+  nextStep: "sync the right drawer with live project context"
 };
 \`\`\`
 
-如果这段渲染没有问题，下一步就可以继续增强代码块、表格和长文档排版。`;
+If this renders well, the next step can deepen the code blocks, tables, and long-form layout support.`;
 
 export const mockConversations: ConversationRecord[] = [
   {
     config: {
-      folderLabel: "悬疑视觉小说",
+      folderLabel: "SuspenseVN",
       modelLabel: "deepseek-v4-pro",
-      presetLabel: "世界观构建 Agent",
+      presetLabel: "World Builder Agent",
       reasoningLevel: "High"
     },
     id: "conv-01",
-    modifiedAt: "5 分钟前",
+    modifiedAt: "5 min ago",
     projectPath: defaultProjectPath,
     status: "running",
-    title: "悬疑视觉小说世界观搭建",
+    title: "Suspense visual novel world setup",
     messages: [
       {
         id: "agent-1",
@@ -82,80 +82,14 @@ export const mockConversations: ConversationRecord[] = [
       {
         id: "user-1",
         role: "user",
-        title: "创作者",
-        body: "我想搭建一个悬疑视觉小说项目，先整理世界观、角色关系和前三章结构。"
+        title: "Creator",
+        body: "I want to build a suspense visual novel project and first sort out the world rules, character relations, and the structure of the first three chapters."
       },
       {
         id: "agent-2",
         role: "agent",
         title: "OpenStoryForge Agent",
-        body: "收到。我会先整理项目上下文，再继续细化章节与冲突节奏。"
-      }
-    ]
-  },
-  {
-    config: {
-      folderLabel: "悬疑视觉小说",
-      modelLabel: "gpt-5-codex",
-      presetLabel: "角色关系分析 Agent",
-      reasoningLevel: "Medium"
-    },
-    id: "conv-02",
-    modifiedAt: "昨天 21:14",
-    projectPath: defaultProjectPath,
-    status: "error",
-    title: "角色关系和冲突草图",
-    messages: [
-      {
-        id: "agent-1",
-        role: "agent",
-        title: "OpenStoryForge Agent",
-        body: "你可以先列出核心角色、他们之间的冲突关系，以及各自掌握的信息差。"
-      },
-      {
-        id: "user-1",
-        role: "user",
-        title: "创作者",
-        body: "我需要整理侦探、失踪者妹妹、匿名举报人和反派之间的关系。"
-      },
-      {
-        id: "agent-2",
-        role: "agent",
-        title: "OpenStoryForge Agent",
-        body: "草图已经生成，但有两处动机冲突还需要回头校正。"
-      }
-    ]
-  },
-  {
-    config: {
-      folderLabel: "悬疑视觉小说",
-      modelLabel: "deepseek-v4-flash",
-      presetLabel: "分支节奏审校 Agent",
-      reasoningLevel: "Low"
-    },
-    id: "conv-03",
-    modifiedAt: "6 月 12 日",
-    projectPath: defaultProjectPath,
-    status: "completed",
-    title: "前三章分支节奏检查",
-    messages: [
-      {
-        id: "agent-1",
-        role: "agent",
-        title: "OpenStoryForge Agent",
-        body: "前三章的分支节奏已经整理完成，我把关键转折压缩成三次主要决策。"
-      },
-      {
-        id: "user-1",
-        role: "user",
-        title: "创作者",
-        body: "我希望第二章结尾前就埋下反派误导观众的假线索。"
-      },
-      {
-        id: "agent-2",
-        role: "agent",
-        title: "OpenStoryForge Agent",
-        body: "已完成节奏检查，当前版本在第二章结尾加入了伪证物与监控盲区的双重误导。"
+        body: "Understood. I will organize the project context first, then continue refining chapters and conflict beats."
       }
     ]
   }
@@ -164,40 +98,41 @@ export const mockConversations: ConversationRecord[] = [
 export const quickPromptPlaceholders: QuickPrompt[] = [
   {
     id: "quick-01",
-    title: "延续当前角色冲突",
-    summary: "基于已有设定，继续梳理主角、匿名举报人和反派之间的动机链。"
+    title: "Continue the current conflict",
+    summary: "Based on the existing setup, continue mapping the motives between the protagonist, anonymous informant, and antagonist."
   },
   {
     id: "quick-02",
-    title: "推进前三章分支",
-    summary: "接着检查前三章分支节奏，补全误导线索和关键决策点。"
+    title: "Push the first three chapters",
+    summary: "Review the branch beats in the first three chapters and fill in misleading clues plus key decisions."
   }
 ];
 
 export const projectTabs = [
-  { id: "directory", label: "目录", icon: FolderTree },
-  { id: "outline", label: "大纲", icon: ListTree },
-  { id: "chapters", label: "章节", icon: BookOpenText },
-  { id: "nodes", label: "节点", icon: Network }
+  { id: "directory", label: "Directory", icon: FolderTree },
+  { id: "outline", label: "Outline", icon: ListTree },
+  { id: "chapters", label: "Chapters", icon: BookOpenText },
+  { id: "nodes", label: "Nodes", icon: Network }
 ] as const;
 
 export const directoryItems: DirectoryItem[] = [
-  { depth: 0, name: "未指定项目文件夹", type: "folder" },
-  { depth: 1, name: "等待选择目录后读取结构", type: "file" },
-  { depth: 1, name: "assets / scripts / chapters", type: "file" }
+  { depth: 0, name: "SuspenseVN", type: "folder" },
+  { depth: 1, name: "story-outline.md", type: "file" },
+  { depth: 1, name: "characters/", type: "folder" },
+  { depth: 1, name: "chapter-drafts/", type: "folder" }
 ];
 
-export const outlineItems = ["世界观设定", "主角动机", "冲突推进", "结局分支"];
+export const outlineItems = ["Worldbuilding", "Main character motive", "Conflict escalation", "Ending branches"];
 
 export const chapterItems: ChapterItem[] = [
-  { title: "序章", meta: "建立悬疑引子" },
-  { title: "第一章", meta: "角色进入异常现场" },
-  { title: "第二章", meta: "关键证词出现矛盾" }
+  { title: "Prologue", meta: "Establish the central mystery" },
+  { title: "Chapter One", meta: "Bring the cast into the abnormal scene" },
+  { title: "Chapter Two", meta: "Introduce contradictory testimony" }
 ];
 
 export const nodeItems: NodeItem[] = [
-  { title: "开始节点", children: ["开场对白", "环境镜头"] },
-  { title: "调查节点", children: ["线索 A", "线索 B", "分支选择"] }
+  { title: "Opening node", children: ["Cold open", "Environmental setup"] },
+  { title: "Investigation node", children: ["Clue A", "Clue B", "Branch decision"] }
 ];
 
 export function buildProjectTree(conversations: ConversationRecord[]): ProjectTreeData {
@@ -226,14 +161,14 @@ export function createConversationRecord(input: CreateConversationInput): Conver
   const userMessage: ConversationMessage = {
     id: `user-${Date.now()}`,
     role: "user",
-    title: "创作者",
+    title: "Creator",
     body: normalizedPrompt
   };
   const agentMessage: ConversationMessage = {
     id: `agent-${Date.now()}`,
     role: "agent",
     title: "OpenStoryForge Agent",
-    body: `已为“${title}”创建会话起点。我会先围绕 ${presetLabel} 整理项目上下文，再继续展开具体执行。`
+    body: `A new conversation entry point is ready for "${title}". I will start by organizing the project context around ${presetLabel} and then continue into execution.`
   };
 
   return {
@@ -245,7 +180,7 @@ export function createConversationRecord(input: CreateConversationInput): Conver
     },
     id: `conv-${Date.now()}`,
     messages: [userMessage, agentMessage],
-    modifiedAt: "刚刚",
+    modifiedAt: "Just now",
     projectPath,
     status: "running",
     title
@@ -253,7 +188,7 @@ export function createConversationRecord(input: CreateConversationInput): Conver
 }
 
 function buildConversationTitle(prompt: string): string {
-  const firstLine = prompt.split(/\r?\n/).find((line) => line.trim().length > 0)?.trim() ?? "新的主题会话";
+  const firstLine = prompt.split(/\r?\n/).find((line) => line.trim().length > 0)?.trim() ?? "New topic conversation";
 
   return firstLine.length > 22 ? `${firstLine.slice(0, 22)}...` : firstLine;
 }
@@ -273,6 +208,5 @@ function normalizeProjectPath(folderPath: string, folderLabel: string): string {
 function getPathLeaf(path: string): string {
   const segments = path.split(/[\\/]/).filter(Boolean);
 
-  return segments.at(-1) ?? "未指定项目";
+  return segments.at(-1) ?? "Unassigned project";
 }
-

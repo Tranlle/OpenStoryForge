@@ -1,9 +1,10 @@
 import { ChevronDown, ChevronUp, FolderTree, History, Plus, Trash2 } from "lucide-react";
 import type { ReactNode } from "react";
 
-import { statusIconMap, statusLabel } from "@renderer/components/layout/app-shell.data";
+import { statusIconMap } from "@renderer/components/layout/app-shell.data";
 import type { ProjectTreeConversation, ProjectTreeData } from "@renderer/components/layout/app-shell.types";
 import { useProjectTreeState } from "@renderer/components/layout/use-project-tree-state";
+import { useI18n } from "@renderer/i18n/use-i18n";
 import { cn } from "@renderer/lib/utils";
 
 type ProjectTreePanelProps = {
@@ -19,6 +20,7 @@ export function ProjectTreePanel({
   projectTree,
   selectedConversationId
 }: ProjectTreePanelProps): JSX.Element {
+  const { t } = useI18n();
   const { isFolderExpanded, toggleFolderExpanded } = useProjectTreeState();
 
   return (
@@ -33,7 +35,7 @@ export function ProjectTreePanel({
       <div className="app-scrollbar h-full overflow-y-auto p-3">
         <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted">
           <FolderTree aria-hidden="true" className="h-3.5 w-3.5" />
-          <span>项目树</span>
+          <span>{t("common.projectTree")}</span>
         </div>
 
         <div className="mt-2">
@@ -53,10 +55,10 @@ export function ProjectTreePanel({
               <span className="truncate">{projectTree.folderName}</span>
               <span className="flex-1" />
               <span className="flex items-center gap-0.5 text-current">
-                <TreeIconButton label="新增对话">
+                <TreeIconButton label={t("home.newConversation")}>
                   <Plus aria-hidden="true" className="h-3.5 w-3.5" />
                 </TreeIconButton>
-                <TreeIconButton label="删除文件夹">
+                <TreeIconButton label={t("home.deleteFolder")}>
                   <Trash2 aria-hidden="true" className="h-3.5 w-3.5" />
                 </TreeIconButton>
                 {isFolderExpanded ? (
@@ -102,6 +104,7 @@ function ProjectConversationItem({
   onSelectConversation: (conversationId: string) => void;
   selected: boolean;
 }): JSX.Element {
+  const { t } = useI18n();
   const StatusIcon = statusIconMap[conversation.status];
 
   return (
@@ -127,7 +130,7 @@ function ProjectConversationItem({
         />
       </div>
       <div className="mt-0.5 flex items-center gap-1.5 text-[10px] leading-4 text-muted">
-        <span>{statusLabel[conversation.status]}</span>
+        <span>{t(`status.${conversation.status}`)}</span>
         <span className="h-1 w-1 rounded-full bg-muted/60" />
         <span>{conversation.modifiedAt}</span>
       </div>
@@ -146,4 +149,3 @@ function TreeIconButton({ children, label }: { children: ReactNode; label: strin
     </span>
   );
 }
-

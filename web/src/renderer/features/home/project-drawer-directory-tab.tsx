@@ -1,14 +1,17 @@
 import { FileText, Folder } from "lucide-react";
 
+import { useI18n } from "@renderer/i18n/use-i18n";
 import { Button } from "@renderer/components/primitives/button";
 import { directoryItems } from "@renderer/features/home/home.data";
 
 export function ProjectDrawerDirectoryTab(): JSX.Element {
+  const { t } = useI18n();
+
   return (
     <div className="space-y-4">
       <Button className="w-full" variant="secondary">
         <Folder aria-hidden="true" className="h-4 w-4" />
-        选择项目文件夹
+        {t("home.selectProjectFolder")}
       </Button>
       <div className="rounded-[1.25rem] bg-background/24 p-3 shadow-[inset_0_0_0_1px_hsl(var(--border)/0.36)]">
         {directoryItems.map((item) => {

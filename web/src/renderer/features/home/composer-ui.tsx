@@ -1,6 +1,7 @@
 import { Folder, SendHorizontal, SlidersHorizontal, X } from "lucide-react";
 import type { ChangeEvent, ComponentProps, ReactNode } from "react";
 
+import { useI18n } from "@renderer/i18n/use-i18n";
 import { Button } from "@renderer/components/primitives/button";
 import {
   getModelDisplay,
@@ -267,27 +268,26 @@ export function FolderDialog({
   projectName?: string;
   projectSuggestions?: string[];
 }): JSX.Element | null {
+  const { t } = useI18n();
+
   if (!folderDialogMode) {
     return null;
   }
 
   const showProjectField = projectInputMode !== "hidden";
-  const dialogTitle = folderDialogMode === "create" ? "指定新文件夹" : "指定已有文件夹";
-  const pathLabel = folderDialogMode === "create" ? "父级路径" : "文件夹路径";
-  const actionLabel = folderDialogMode === "create" ? "创建文件夹" : "选择文件夹";
 
   return (
     <DialogBackdrop onClose={onClose}>
       <div className="rounded-[1.6rem] bg-surface p-5 shadow-[0_12px_32px_hsl(var(--foreground)/0.028)]">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <div className="font-display text-xl font-black">{dialogTitle}</div>
-            <div className="mt-2 text-sm leading-6 text-muted">
-              文件夹是任务上下文，不强制决定项目身份。欢迎页可新建或绑定项目，Home 页仅展示当前项目。
+            <div className="font-display text-xl font-black">
+              {folderDialogMode === "create" ? t("composer.dialog.createTitle") : t("composer.dialog.selectTitle")}
             </div>
+            <div className="mt-2 text-sm leading-6 text-muted">{t("composer.dialog.description")}</div>
           </div>
           <button
-            aria-label="关闭弹窗"
+            aria-label={t("composer.dialog.close")}
             className="grid h-9 w-9 place-items-center rounded-xl bg-background/30 text-muted transition hover:bg-background/50 hover:text-foreground"
             onClick={onClose}
             type="button"
@@ -299,8 +299,10 @@ export function FolderDialog({
         <div className="mt-5 space-y-4">
           {showProjectField ? (
             <ProjectNameInput
-              helpText={projectInputMode === "readonly" ? "当前项目只读显示。" : "可输入新项目名，或选择已有项目。"}
-              label="项目"
+              helpText={
+                projectInputMode === "readonly" ? t("composer.dialog.projectReadonly") : t("composer.dialog.projectEditable")
+              }
+              label={t("common.project")}
               listId="folder-dialog-project-options"
               onChange={(value) => onProjectNameChange?.(value)}
               readOnly={projectInputMode === "readonly"}
@@ -310,7 +312,7 @@ export function FolderDialog({
           ) : null}
 
           <Field>
-            <FieldLabel>{pathLabel}</FieldLabel>
+            <FieldLabel>{folderDialogMode === "create" ? t("composer.dialog.basePath") : t("composer.dialog.folderPath")}</FieldLabel>
             <FieldInput
               onChange={(event) =>
                 folderDialogMode === "create"
@@ -323,7 +325,7 @@ export function FolderDialog({
 
           {folderDialogMode === "create" ? (
             <Field>
-              <FieldLabel>文件夹名称</FieldLabel>
+              <FieldLabel>{t("composer.dialog.folderName")}</FieldLabel>
               <FieldInput onChange={(event) => onFolderNameChange(event.target.value)} value={folderName} />
             </Field>
           ) : null}
@@ -331,10 +333,10 @@ export function FolderDialog({
 
         <div className="mt-6 flex justify-end gap-3">
           <Button onClick={onClose} type="button" variant="ghost">
-            取消
+            {t("common.cancel")}
           </Button>
           <Button onClick={onConfirm} type="button">
-            {actionLabel}
+            {folderDialogMode === "create" ? t("composer.dialog.createAction") : t("composer.dialog.selectAction")}
           </Button>
         </div>
       </div>
@@ -358,7 +360,7 @@ export function ComposerControlsRow({
   selectedPresetLabel,
   selectedReasoningLevel,
   submitDisabled = false,
-  submitLabel = "发送"
+  submitLabel
 }: {
   onFolderCreate: () => void;
   onFolderSelect: () => void;
@@ -377,6 +379,8 @@ export function ComposerControlsRow({
   submitDisabled?: boolean;
   submitLabel?: string;
 }): JSX.Element {
+  const { t } = useI18n();
+
   return (
     <div className="flex flex-wrap items-center gap-3">
       <SelectionButton
@@ -387,8 +391,8 @@ export function ComposerControlsRow({
       >
         {openMenu === "folder" ? (
           <OptionMenu>
-            <MenuAction label="创建并指定文件夹" onClick={onFolderCreate} />
-            <MenuAction label="选择已有文件夹" onClick={onFolderSelect} />
+            <MenuAction label={t("composer.createAndSpecifyFolder")} onClick={onFolderCreate} />
+            <MenuAction label={t("composer.selectExistingFolder")} onClick={onFolderSelect} />
           </OptionMenu>
         ) : null}
       </SelectionButton>
@@ -427,23 +431,23 @@ export function ComposerControlsRow({
 
       {onModeClick ? (
         <button
-          aria-label="Agent 运行模式"
+          aria-label={t("composer.agentMode")}
           className="grid h-[50px] w-[50px] place-items-center rounded-2xl bg-surface/16 text-muted shadow-[inset_0_0_0_1px_hsl(var(--border)/0.14)] transition hover:bg-surface/22 hover:text-foreground"
           onClick={onModeClick}
-          title="Agent 运行模式"
+          title={t("composer.agentMode")}
           type="button"
         >
           <SlidersHorizontal aria-hidden="true" className="h-4 w-4" />
         </button>
       ) : (
-        <IconButton label="Agent 运行模式">
+        <IconButton label={t("composer.agentMode")}>
           <SlidersHorizontal aria-hidden="true" className="h-4 w-4" />
         </IconButton>
       )}
 
       <Button className="h-11 rounded-2xl px-4 text-sm" disabled={submitDisabled} onClick={onSubmit} type="button">
         <SendHorizontal aria-hidden="true" className="h-4 w-4" />
-        {submitLabel}
+        {submitLabel ?? t("common.send")}
       </Button>
     </div>
   );

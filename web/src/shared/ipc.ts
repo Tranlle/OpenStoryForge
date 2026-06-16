@@ -1,9 +1,17 @@
+import type { RegisteredGlobalShortcut } from "./electron";
+
 export type WindowState = {
   isFullScreen: boolean;
   isMaximized: boolean;
 };
 
 export type IpcChannelMap = {
+  "shortcuts:register-global-bindings": {
+    args: [RegisteredGlobalShortcut[]];
+    return: {
+      registeredCommandIds: string[];
+    };
+  };
   "window:close": {
     args: [];
     return: void;

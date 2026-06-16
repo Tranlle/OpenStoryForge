@@ -15,6 +15,12 @@ export type OpenStoryForgeWindowState = {
 
 export type OpenStoryForgeDesktopApi = {
   getAppInfo: () => OpenStoryForgeAppInfo;
+  shortcuts: {
+    onCommand: (callback: (commandId: ShortcutCommandId) => void) => () => void;
+    registerGlobalBindings: (bindings: RegisteredGlobalShortcut[]) => Promise<{
+      registeredCommandIds: string[];
+    }>;
+  };
   windowControls: {
     close: () => Promise<void>;
     getState: () => Promise<OpenStoryForgeWindowState>;
@@ -22,4 +28,20 @@ export type OpenStoryForgeDesktopApi = {
     onStateChange: (callback: (state: OpenStoryForgeWindowState) => void) => () => void;
     toggleMaximize: () => Promise<void>;
   };
+};
+
+export type ShortcutCommandId =
+  | "app.gotoWelcome"
+  | "app.gotoHome"
+  | "app.toggleTheme"
+  | "welcome.quickStart"
+  | "welcome.projects"
+  | "welcome.tokens"
+  | "welcome.settings"
+  | "home.newConversation"
+  | "home.returnWelcome";
+
+export type RegisteredGlobalShortcut = {
+  accelerator: string;
+  commandId: ShortcutCommandId;
 };

@@ -1,6 +1,7 @@
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { Moon, Sparkles, Sun, Waves } from "lucide-react";
 
+import { useI18n } from "@renderer/i18n/use-i18n";
 import { Button } from "@renderer/components/primitives/button";
 import { cn } from "@renderer/lib/utils";
 
@@ -8,25 +9,25 @@ export const themes = [
   {
     id: "paper-atelier",
     name: "Paper Atelier",
-    label: "明亮编辑室",
+    labelKey: "theme.paper-atelier",
     icon: Sun
   },
   {
     id: "glass-script",
     name: "Glass Script",
-    label: "明亮玻璃稿台",
+    labelKey: "theme.glass-script",
     icon: Waves
   },
   {
     id: "ink-theater",
     name: "Ink Theater",
-    label: "暗黑剧场",
+    labelKey: "theme.ink-theater",
     icon: Moon
   },
   {
     id: "signal-forge",
     name: "Signal Forge",
-    label: "暗黑信号熔炉",
+    labelKey: "theme.signal-forge",
     icon: Sparkles
   }
 ] as const;
@@ -38,14 +39,20 @@ type ThemeSwitcherProps = {
   onChange: (theme: ThemeId) => void;
 };
 
+export function getNextThemeId(value: ThemeId): ThemeId {
+  const selectedIndex = themes.findIndex((theme) => theme.id === value);
+  return themes[(selectedIndex + 1) % themes.length]?.id ?? themes[0].id;
+}
+
 export function ThemeSwitcher({ value, onChange }: ThemeSwitcherProps): JSX.Element {
+  const { t } = useI18n();
   const selectedIndex = themes.findIndex((theme) => theme.id === value);
   const selectedTheme = themes[selectedIndex] ?? themes[0];
   const Icon = selectedTheme.icon;
+  const selectedLabel = t(selectedTheme.labelKey);
 
   const handleCycleTheme = (): void => {
-    const nextTheme = themes[(selectedIndex + 1) % themes.length] ?? themes[0];
-    onChange(nextTheme.id);
+    onChange(getNextThemeId(value));
   };
 
   return (
@@ -53,18 +60,18 @@ export function ThemeSwitcher({ value, onChange }: ThemeSwitcherProps): JSX.Elem
       <Tooltip.Root>
         <Tooltip.Trigger asChild>
           <Button
-            aria-label={`切换主题，当前为 ${selectedTheme.label}`}
+            aria-label={t("theme.cycle", { label: selectedLabel })}
             className={cn(
               "h-9 rounded-control border border-border bg-surface/54 px-3 text-foreground shadow-panel hover:bg-surface",
               "gap-2 font-medium"
             )}
+            onClick={handleCycleTheme}
             size="sm"
             type="button"
             variant="ghost"
-            onClick={handleCycleTheme}
           >
             <Icon aria-hidden="true" className="h-4 w-4 shrink-0 text-accent" />
-            <span className="truncate text-[12px]">{selectedTheme.label}</span>
+            <span className="truncate text-[12px]">{selectedLabel}</span>
           </Button>
         </Tooltip.Trigger>
         <Tooltip.Portal>
@@ -72,7 +79,7 @@ export function ThemeSwitcher({ value, onChange }: ThemeSwitcherProps): JSX.Elem
             className="z-50 rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground shadow-lift"
             sideOffset={8}
           >
-            点击切换主题
+            {t("theme.clickToCycle")}
             <Tooltip.Arrow className="fill-surface" />
           </Tooltip.Content>
         </Tooltip.Portal>

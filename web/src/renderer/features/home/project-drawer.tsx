@@ -6,6 +6,7 @@ import { ProjectDrawerDirectoryTab } from "@renderer/features/home/project-drawe
 import { ProjectDrawerNodesTab } from "@renderer/features/home/project-drawer-nodes-tab";
 import { ProjectDrawerOutlineTab } from "@renderer/features/home/project-drawer-outline-tab";
 import type { ProjectTabId } from "@renderer/features/home/home.types";
+import { useI18n } from "@renderer/i18n/use-i18n";
 import { cn } from "@renderer/lib/utils";
 
 type ProjectDrawerProps = {
@@ -16,6 +17,8 @@ type ProjectDrawerProps = {
 };
 
 export function ProjectDrawer({ activeTab, isOpen, onTabChange, onToggle }: ProjectDrawerProps): JSX.Element {
+  const { t } = useI18n();
+
   return (
     <aside
       className={cn(
@@ -27,7 +30,7 @@ export function ProjectDrawer({ activeTab, isOpen, onTabChange, onToggle }: Proj
       <div className="flex h-full w-[72px] shrink-0 flex-col items-center py-2">
         <div className="flex h-12 shrink-0 items-center justify-center">
           <button
-            aria-label={isOpen ? "收起页面栏" : "展开页面栏"}
+            aria-label={isOpen ? t("home.drawerCollapse") : t("home.drawerExpand")}
             className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-background/18 text-muted transition hover:bg-surface/46 hover:text-foreground"
             onClick={onToggle}
             type="button"
@@ -44,10 +47,11 @@ export function ProjectDrawer({ activeTab, isOpen, onTabChange, onToggle }: Proj
           {projectTabs.map((tab) => {
             const Icon = tab.icon;
             const selected = activeTab === tab.id;
+            const label = t(`home.tabs.${tab.id}`);
 
             return (
               <button
-                aria-label={tab.label}
+                aria-label={label}
                 aria-pressed={selected}
                 className={cn(
                   "grid h-10 w-10 place-items-center rounded-xl text-muted transition hover:bg-surface/46 hover:text-foreground",
@@ -61,7 +65,7 @@ export function ProjectDrawer({ activeTab, isOpen, onTabChange, onToggle }: Proj
                     onToggle();
                   }
                 }}
-                title={tab.label}
+                title={label}
                 type="button"
               >
                 <Icon aria-hidden="true" className="h-4 w-4" />

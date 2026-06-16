@@ -14,6 +14,7 @@ import { conversationRailClass } from "@renderer/features/home/composer-options"
 import type { ConversationMessage, ConversationRecord } from "@renderer/features/home/home.types";
 import { useComposerControls } from "@renderer/features/home/use-composer-controls";
 import { useProjectDrawerState } from "@renderer/features/home/use-project-drawer-state";
+import { useI18n } from "@renderer/i18n/use-i18n";
 import { cn } from "@renderer/lib/utils";
 
 export function ConversationWorkspace({ conversation }: { conversation: ConversationRecord }): JSX.Element {
@@ -28,6 +29,7 @@ export function ConversationWorkspace({ conversation }: { conversation: Conversa
 }
 
 function AgentWorkspace({ conversation }: { conversation: ConversationRecord }): JSX.Element {
+  const { t } = useI18n();
   const [draft, setDraft] = useState("");
   const controls = useComposerControls({
     existingFolderPath: conversation.projectPath,
@@ -50,7 +52,7 @@ function AgentWorkspace({ conversation }: { conversation: ConversationRecord }):
           <div className="mt-1 truncate text-[11px] leading-4 text-muted">{conversation.projectPath}</div>
         </div>
         <div className="flex items-center gap-2">
-          <IconButton label="Agent 设置">
+          <IconButton label={t("home.agentSettings")}>
             <Settings2 aria-hidden="true" className="h-4 w-4" />
           </IconButton>
         </div>
@@ -69,9 +71,9 @@ function AgentWorkspace({ conversation }: { conversation: ConversationRecord }):
           <div className={conversationRailClass}>
             <InputComposerContainer data-conversation-composer>
               <textarea
-                className="min-h-[96px] w-full resize-none bg-transparent px-1 py-2 text-sm leading-6 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 placeholder:text-muted"
+                className="min-h-[96px] w-full resize-none bg-transparent px-1 py-2 text-sm leading-6 outline-none ring-0 placeholder:text-muted focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
                 onChange={(event) => setDraft(event.target.value)}
-                placeholder="输入创作目标、剧情设定，或让 Agent 继续分析当前项目..."
+                placeholder={t("composer.conversationPlaceholder")}
                 rows={3}
                 value={draft}
               />
@@ -114,7 +116,7 @@ function AgentWorkspace({ conversation }: { conversation: ConversationRecord }):
         onFolderBasePathChange={controls.setFolderBasePath}
         onFolderNameChange={controls.setFolderName}
         projectInputMode="readonly"
-        projectName={conversation.projectName ?? "Current project"}
+        projectName={conversation.projectName ?? t("common.currentProject")}
       />
     </section>
   );

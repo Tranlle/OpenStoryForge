@@ -18,29 +18,23 @@ import {
 import type { AppNavItem, OverflowNavItem, ProjectTreeConversation } from "@renderer/components/layout/app-shell.types";
 
 export const primaryNavItems: AppNavItem[] = [
-  { id: "new-chat", icon: Sparkles, label: "新建对话" },
-  { id: "skills", icon: Bot, label: "Skills" },
-  { id: "tools", icon: Wrench, label: "Tools" },
-  { id: "automation", icon: Workflow, label: "自动流" },
-  { id: "mcp", icon: Puzzle, label: "MCP Server" }
+  { id: "new-chat", icon: Sparkles, labelKey: "nav.newChat" },
+  { id: "skills", icon: Bot, labelKey: "nav.skills" },
+  { id: "tools", icon: Wrench, labelKey: "nav.tools" },
+  { id: "automation", icon: Workflow, labelKey: "nav.automation" },
+  { id: "mcp", icon: Puzzle, labelKey: "nav.mcp" }
 ];
 
 export const secondaryNavItems: AppNavItem[] = [
-  { id: "archive", icon: Archive, label: "归档" },
-  { id: "settings", icon: Settings, label: "设置" }
+  { id: "archive", icon: Archive, labelKey: "nav.archive" },
+  { id: "settings", icon: Settings, labelKey: "nav.settings" }
 ];
 
 export const overflowNavItems: OverflowNavItem[] = [
-  { icon: LayoutTemplate, label: "最近模板" },
-  { icon: Users, label: "团队空间" },
-  { icon: GitBranch, label: "实验面板" }
+  { icon: LayoutTemplate, labelKey: "nav.recentTemplates" },
+  { icon: Users, labelKey: "nav.teamSpace" },
+  { icon: GitBranch, labelKey: "nav.experiments" }
 ];
-
-export const statusLabel: Record<ProjectTreeConversation["status"], string> = {
-  completed: "已完成",
-  error: "异常",
-  running: "运行中"
-};
 
 export const statusIconMap: Record<ProjectTreeConversation["status"], LucideIcon> = {
   completed: CircleCheck,

@@ -1,6 +1,7 @@
 import { contextBridge } from "electron";
 
 import type { OpenStoryForgeDesktopApi } from "../shared/electron";
+import { createShortcutsApi } from "./shortcuts";
 import { createWindowControlsApi } from "./window-controls";
 
 const desktopApi: OpenStoryForgeDesktopApi = {
@@ -13,6 +14,7 @@ const desktopApi: OpenStoryForgeDesktopApi = {
       node: process.versions.node
     }
   }),
+  shortcuts: createShortcutsApi(),
   windowControls: createWindowControlsApi()
 };
 

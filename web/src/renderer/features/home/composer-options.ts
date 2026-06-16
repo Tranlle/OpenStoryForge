@@ -17,6 +17,12 @@ export type GroupedOptions = {
   label: string;
 };
 
+export type WelcomeCopy = {
+  description: string;
+  eyebrow: string;
+  title: string;
+};
+
 export const conversationRailClass = "mx-auto w-full max-w-[1040px]";
 
 export const modelGroups: GroupedModels[] = [
@@ -38,17 +44,17 @@ export const modelGroups: GroupedModels[] = [
 
 export const presetGroups: GroupedOptions[] = [
   {
-    label: "写作",
+    label: "Writing",
     items: [
-      { id: "story-planner", label: "故事策划 Agent" },
-      { id: "world-builder", label: "世界观构建 Agent" }
+      { id: "story-planner", label: "Story Planner Agent" },
+      { id: "world-builder", label: "World Builder Agent" }
     ]
   },
   {
-    label: "分析",
+    label: "Analysis",
     items: [
-      { id: "branch-reviewer", label: "分支节奏审校 Agent" },
-      { id: "character-analyst", label: "角色关系分析 Agent" }
+      { id: "branch-reviewer", label: "Branch Review Agent" },
+      { id: "character-analyst", label: "Character Analyst Agent" }
     ]
   }
 ];
@@ -60,14 +66,13 @@ export const reasoningLevelsByModel: Record<string, string[]> = {
   "gpt-5": ["None", "Low", "Medium", "High"]
 };
 
-export const welcomeCopy = {
-  eyebrow: "让故事先轻轻露面",
-  title: "让我们从哪里开始？\n遇见星尘，还是再会某位灵魂故人？",
+export const welcomeCopy: WelcomeCopy = {
+  eyebrow: "Let the story surface first",
+  title: "Where should we begin?\nA city not yet named, or a mystery still unresolved?",
   description:
-    "先说出一句目标也可以。它可以是一座尚未命名的城市，一段悬而未决的命运，或一个仍在记忆深处等待重逢的人。"
+    "A single sentence is enough to start. It can be a world seed, a route sketch, a conflict map, or a character thread waiting to be pulled into focus."
 };
 
 export function getModelDisplay(model: ModelOption): string {
   return model.shortName || model.name || model.id;
 }
-

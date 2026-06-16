@@ -5,6 +5,7 @@ import { overflowNavItems, primaryNavItems, secondaryNavItems } from "@renderer/
 import type { AppNavItemId, ProjectTreeData } from "@renderer/components/layout/app-shell.types";
 import { ProjectTreePanel } from "@renderer/components/layout/project-tree-panel";
 import { useSidebarNavState } from "@renderer/components/layout/use-sidebar-nav-state";
+import { useI18n } from "@renderer/i18n/use-i18n";
 import { cn } from "@renderer/lib/utils";
 
 type SidebarNavProps = {
@@ -30,6 +31,7 @@ export function SidebarNav({
   projectTree,
   selectedConversationId
 }: SidebarNavProps): JSX.Element {
+  const { t } = useI18n();
   const { isMoreExpanded, toggleMoreExpanded } = useSidebarNavState();
   const animationTimerRef = useRef<number | undefined>(undefined);
   const [isMenuExpanded, setIsMenuExpanded] = useState(isExpanded);
@@ -82,13 +84,13 @@ export function SidebarNav({
         )}
       >
         <button
-          aria-label="Back to welcome"
+          aria-label={t("shell.backToWelcome")}
           className={cn(
             "grid h-10 w-10 place-items-center rounded-xl bg-background/14 text-muted transition hover:bg-surface/46 hover:text-foreground",
             !isWidthExpanded && "hidden"
           )}
           onClick={onReturnHome}
-          title="Back to welcome"
+          title={t("shell.backToWelcome")}
           type="button"
         >
           <Home aria-hidden="true" className="h-4 w-4" />
@@ -96,20 +98,20 @@ export function SidebarNav({
 
         {isWidthExpanded ? (
           <button
-            aria-label="Collapse sidebar"
+            aria-label={t("shell.collapseSidebar")}
             className="grid h-10 w-10 place-items-center rounded-xl bg-background/14 text-muted transition hover:bg-surface/46 hover:text-foreground"
             onClick={() => onExpandChange(false)}
-            title="Collapse sidebar"
+            title={t("shell.collapseSidebar")}
             type="button"
           >
             <PanelLeftClose aria-hidden="true" className="h-4 w-4" />
           </button>
         ) : (
           <button
-            aria-label="Expand sidebar"
+            aria-label={t("shell.expandSidebar")}
             className="absolute right-3 top-2 hidden h-10 w-10 place-items-center rounded-xl bg-background/14 text-muted transition hover:bg-surface/46 hover:text-foreground lg:grid"
             onClick={() => onExpandChange(true)}
-            title="Expand sidebar"
+            title={t("shell.expandSidebar")}
             type="button"
           >
             <PanelLeftOpen aria-hidden="true" className="h-4 w-4" />
@@ -137,7 +139,7 @@ export function SidebarNav({
                         compact={!isWidthExpanded}
                         icon={item.icon}
                         key={item.id}
-                        label={item.label}
+                        label={t(item.labelKey)}
                         onClick={() => onNavigate(item.id)}
                       />
                     ))}
@@ -154,8 +156,8 @@ export function SidebarNav({
                             <SidebarPlaceholderButton
                               compact={!isWidthExpanded}
                               icon={item.icon}
-                              key={item.label}
-                              label={item.label}
+                              key={item.labelKey}
+                              label={t(item.labelKey)}
                             />
                           ))}
                         </div>
@@ -178,7 +180,7 @@ export function SidebarNav({
                         </>
                       ) : (
                         <>
-                          <span className={cn("flex-1 text-left", !isWidthExpanded && "hidden")}>More</span>
+                          <span className={cn("flex-1 text-left", !isWidthExpanded && "hidden")}>{t("nav.more")}</span>
                           <ChevronDown aria-hidden="true" className="h-4 w-4" />
                         </>
                       )}
@@ -205,7 +207,7 @@ export function SidebarNav({
                     compact={!isWidthExpanded}
                     icon={item.icon}
                     key={item.id}
-                    label={item.label}
+                    label={t(item.labelKey)}
                     onClick={() => onNavigate(item.id)}
                   />
                 ))}

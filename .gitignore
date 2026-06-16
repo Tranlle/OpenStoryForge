@@ -142,6 +142,7 @@ xunit-results.xml
 coverage/
 coverage*/
 TestResults/
+test-results/
 *.coverage
 *.coveragexml
 coverage.cobertura.xml

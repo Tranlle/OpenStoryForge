@@ -8,6 +8,7 @@ import {
   type MenuId,
   type ModelOption
 } from "@renderer/features/home/composer-options";
+import { useI18n } from "@renderer/i18n/use-i18n";
 
 type ComposerControlsInit = {
   existingFolderPath?: string;
@@ -20,13 +21,14 @@ type ComposerControlsInit = {
 };
 
 const defaultFolderBasePath = "D:/Stories";
-const defaultFolderLabel = "指定文件夹";
-const defaultFolderName = "新的项目任务";
+const defaultFolderName = "new-project-task";
 const defaultModelId = "deepseek-v4-flash";
-const defaultPresetLabel = "故事策划 Agent";
+const defaultPresetLabel = "Story Planner Agent";
 const defaultReasoningLevel = "None";
 
 export function useComposerControls(initial?: ComposerControlsInit) {
+  const { t } = useI18n();
+  const defaultFolderLabel = t("composer.selectFolder");
   const [openMenu, setOpenMenu] = useState<MenuId>(null);
   const [folderDialogMode, setFolderDialogMode] = useState<FolderDialogMode>(null);
   const [selectedFolderLabel, setSelectedFolderLabel] = useState(initial?.folderLabel ?? "");
@@ -89,7 +91,7 @@ export function useComposerControls(initial?: ComposerControlsInit) {
     selectedFolderLabel: selectedFolderLabel || defaultFolderLabel,
     selectedModel,
     selectedModelId,
-    selectedModelLabel: selectedModel ? getModelDisplay(selectedModel) : "选择模型",
+    selectedModelLabel: selectedModel ? getModelDisplay(selectedModel) : t("composer.selectModel"),
     selectedPresetLabel: selectedPresetLabel || defaultPresetLabel,
     selectedReasoningLevel,
     selectModel,
@@ -102,4 +104,3 @@ export function useComposerControls(initial?: ComposerControlsInit) {
     setOpenMenu
   };
 }
-

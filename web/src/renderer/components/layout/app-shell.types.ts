@@ -18,18 +18,18 @@ export type ProjectTreeConversation = {
 };
 
 export type ProjectTreeData = {
+  conversations: ProjectTreeConversation[];
   folderName: string;
   name: string;
-  conversations: ProjectTreeConversation[];
 };
 
 export type AppNavItem = {
-  id: AppNavItemId;
   icon: LucideIcon;
-  label: string;
+  id: AppNavItemId;
+  labelKey: string;
 };
 
 export type OverflowNavItem = {
   icon: LucideIcon;
-  label: string;
+  labelKey: string;
 };
